@@ -3,7 +3,7 @@
 <title>Static Call Graph - [STM3210E-EVAL\STM3210E-EVAL.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image STM3210E-EVAL\STM3210E-EVAL.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060422: Last Updated: Wed Feb 14 22:26:03 2018
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060422: Last Updated: Wed Feb 14 22:35:02 2018
 <BR><P>
 <H3>Maximum Stack Usage =        164 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -425,8 +425,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[65]"></a>GetEPTxAddr</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, usb_regs.o(i.GetEPTxAddr))
-<BR><BR>[Called By]<UL><LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageIn
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
+<BR><BR>[Called By]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
+<LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageIn
 </UL>
 
 <P><STRONG><a name="[72]"></a>Get_SerialNum</STRONG> (Thumb, 42 bytes, Stack size 16 bytes, hw_config.o(i.Get_SerialNum))
@@ -512,27 +512,27 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> usb_prop.o(.data)
 </UL>
 <P><STRONG><a name="[1]"></a>Joystick_Reset</STRONG> (Thumb, 148 bytes, Stack size 8 bytes, usb_prop.o(i.Joystick_Reset))
-<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = Joystick_Reset &rArr; SetDeviceAddress
+<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = Joystick_Reset &rArr; SetEPTxStatus
 </UL>
-<BR>[Calls]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetDeviceAddress
-<LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPType
+<BR>[Calls]<UL><LI><a href="#[7b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPType
 <LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPTxStatus
+<LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPTxCount
 <LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPTxAddr
 <LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPRxValid
 <LI><a href="#[82]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPRxStatus
 <LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPRxCount
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPRxAddr
+<LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetDeviceAddress
 <LI><a href="#[7a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetBTABLE
 <LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Clear_Status_Out
-<LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPTxCount
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> usb_prop.o(.data)
 </UL>
 <P><STRONG><a name="[83]"></a>Joystick_Send</STRONG> (Thumb, 96 bytes, Stack size 24 bytes, hw_config.o(i.Joystick_Send))
 <BR><BR>[Stack]<UL><LI>Max Depth = 68<LI>Call Chain = Joystick_Send &rArr; USB_SIL_Write &rArr; UserToPMABufferCopy
 </UL>
-<BR>[Calls]<UL><LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPTxValid
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
+<BR>[Calls]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
+<LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPTxValid
 </UL>
 <BR>[Called By]<UL><LI><a href="#[54]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -569,8 +569,8 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f10x_hd.o(RESET)
 </UL>
 <P><STRONG><a name="[a]"></a>NOP_Process</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, usb_core.o(i.NOP_Process))
-<BR>[Address Reference Count : 2]<UL><LI> usb_prop.o(.data)
-<LI> usb_istr.o(.data)
+<BR>[Address Reference Count : 2]<UL><LI> usb_istr.o(.data)
+<LI> usb_prop.o(.data)
 </UL>
 <P><STRONG><a name="[96]"></a>NVIC_Init</STRONG> (Thumb, 100 bytes, Stack size 16 bytes, misc.o(i.NVIC_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = NVIC_Init
@@ -622,8 +622,8 @@ Global Symbols
 <P><STRONG><a name="[86]"></a>PowerOn</STRONG> (Thumb, 70 bytes, Stack size 8 bytes, usb_pwr.o(i.PowerOn))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = PowerOn &rArr; USB_Cable_Config
 </UL>
-<BR>[Calls]<UL><LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetISTR
-<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_Cable_Config
+<BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_Cable_Config
+<LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetISTR
 </UL>
 <BR>[Called By]<UL><LI><a href="#[0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Joystick_init
 </UL>
@@ -685,8 +685,8 @@ Global Symbols
 <P><STRONG><a name="[74]"></a>SetDeviceAddress</STRONG> (Thumb, 68 bytes, Stack size 12 bytes, usb_core.o(i.SetDeviceAddress))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = SetDeviceAddress
 </UL>
-<BR>[Called By]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;In0_Process
-<LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Joystick_Reset
+<BR>[Called By]<UL><LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Joystick_Reset
+<LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;In0_Process
 </UL>
 
 <P><STRONG><a name="[7d]"></a>SetEPRxAddr</STRONG> (Thumb, 26 bytes, Stack size 8 bytes, usb_regs.o(i.SetEPRxAddr))
@@ -698,9 +698,9 @@ Global Symbols
 <P><STRONG><a name="[80]"></a>SetEPRxCount</STRONG> (Thumb, 68 bytes, Stack size 8 bytes, usb_regs.o(i.SetEPRxCount))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = SetEPRxCount
 </UL>
-<BR>[Called By]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Standard_ClearFeature
+<BR>[Called By]<UL><LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Joystick_Reset
+<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Standard_ClearFeature
 <LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Post0_Process
-<LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Joystick_Reset
 </UL>
 
 <P><STRONG><a name="[82]"></a>SetEPRxStatus</STRONG> (Thumb, 60 bytes, Stack size 12 bytes, usb_regs.o(i.SetEPRxStatus))
@@ -722,17 +722,17 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[67]"></a>SetEPTxCount</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, usb_regs.o(i.SetEPTxCount))
-<BR><BR>[Called By]<UL><LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageOut
-<LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageIn
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
+<BR><BR>[Called By]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
 <LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Joystick_Reset
+<LI><a href="#[68]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageOut
+<LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageIn
 </UL>
 
 <P><STRONG><a name="[7c]"></a>SetEPTxStatus</STRONG> (Thumb, 60 bytes, Stack size 12 bytes, usb_regs.o(i.SetEPTxStatus))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = SetEPTxStatus
 </UL>
-<BR>[Called By]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Standard_ClearFeature
-<LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Joystick_Reset
+<BR>[Called By]<UL><LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Joystick_Reset
+<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Standard_ClearFeature
 </UL>
 
 <P><STRONG><a name="[85]"></a>SetEPTxValid</STRONG> (Thumb, 48 bytes, Stack size 8 bytes, usb_regs.o(i.SetEPTxValid))
@@ -895,8 +895,8 @@ Global Symbols
 <P><STRONG><a name="[a4]"></a>USB_Istr</STRONG> (Thumb, 422 bytes, Stack size 40 bytes, usb_istr.o(i.USB_Istr))
 <BR><BR>[Stack]<UL><LI>Max Depth = 156<LI>Call Chain = USB_Istr &rArr; CTR_LP &rArr; Setup0_Process &rArr; Data_Setup0 &rArr; DataStageIn &rArr; UserToPMABufferCopy
 </UL>
-<BR>[Calls]<UL><LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CTR_LP
-<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Suspend
+<BR>[Calls]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Suspend
+<LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;CTR_LP
 <LI><a href="#[71]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Resume
 </UL>
 <BR>[Called By]<UL><LI><a href="#[2c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_LP_CAN1_RX0_IRQHandler
@@ -916,8 +916,8 @@ Global Symbols
 <P><STRONG><a name="[84]"></a>USB_SIL_Write</STRONG> (Thumb, 46 bytes, Stack size 24 bytes, usb_sil.o(i.USB_SIL_Write))
 <BR><BR>[Stack]<UL><LI>Max Depth = 44<LI>Call Chain = USB_SIL_Write &rArr; UserToPMABufferCopy
 </UL>
-<BR>[Calls]<UL><LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UserToPMABufferCopy
-<LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPTxCount
+<BR>[Calls]<UL><LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPTxCount
+<LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UserToPMABufferCopy
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GetEPTxAddr
 </UL>
 <BR>[Called By]<UL><LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Joystick_Send
@@ -929,8 +929,8 @@ Global Symbols
 <P><STRONG><a name="[66]"></a>UserToPMABufferCopy</STRONG> (Thumb, 52 bytes, Stack size 20 bytes, usb_mem.o(i.UserToPMABufferCopy))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = UserToPMABufferCopy
 </UL>
-<BR>[Called By]<UL><LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageIn
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
+<BR>[Called By]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
+<LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageIn
 </UL>
 
 <P><STRONG><a name="[af]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
@@ -942,23 +942,43 @@ Global Symbols
 <P><STRONG><a name="[54]"></a>main</STRONG> (Thumb, 50 bytes, Stack size 0 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 68<LI>Call Chain = main &rArr; Joystick_Send &rArr; USB_SIL_Write &rArr; UserToPMABufferCopy
 </UL>
-<BR>[Calls]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_Init
-<LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_Interrupts_Config
+<BR>[Calls]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_Interrupts_Config
 <LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_USBClock
 <LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_System
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Joystick_Send
 <LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;JoyState
+<LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_Init
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> entry9a.o(.ARM.Collect$$$$0000000B)
 </UL><P>
 <H3>
 Local Symbols
 </H3>
+<P><STRONG><a name="[73]"></a>IntToUnicode</STRONG> (Thumb, 62 bytes, Stack size 12 bytes, hw_config.o(i.IntToUnicode))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = IntToUnicode
+</UL>
+<BR>[Called By]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Get_SerialNum
+</UL>
+
+<P><STRONG><a name="[97]"></a>SetSysClock</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, system_stm32f10x.o(i.SetSysClock))
+<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = SetSysClock &rArr; SetSysClockTo72
+</UL>
+<BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetSysClockTo72
+</UL>
+<BR>[Called By]<UL><LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemInit
+</UL>
+
+<P><STRONG><a name="[98]"></a>SetSysClockTo72</STRONG> (Thumb, 214 bytes, Stack size 12 bytes, system_stm32f10x.o(i.SetSysClockTo72))
+<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = SetSysClockTo72
+</UL>
+<BR>[Called By]<UL><LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetSysClock
+</UL>
+
 <P><STRONG><a name="[64]"></a>DataStageIn</STRONG> (Thumb, 166 bytes, Stack size 32 bytes, usb_core.o(i.DataStageIn))
 <BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = DataStageIn &rArr; UserToPMABufferCopy
 </UL>
-<BR>[Calls]<UL><LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UserToPMABufferCopy
-<LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPTxCount
+<BR>[Calls]<UL><LI><a href="#[67]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetEPTxCount
+<LI><a href="#[66]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UserToPMABufferCopy
 <LI><a href="#[65]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GetEPTxAddr
 </UL>
 <BR>[Called By]<UL><LI><a href="#[6b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Data_Setup0
@@ -993,26 +1013,6 @@ Local Symbols
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Standard_ClearFeature
 </UL>
 <BR>[Called By]<UL><LI><a href="#[62]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Setup0_Process
-</UL>
-
-<P><STRONG><a name="[73]"></a>IntToUnicode</STRONG> (Thumb, 62 bytes, Stack size 12 bytes, hw_config.o(i.IntToUnicode))
-<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = IntToUnicode
-</UL>
-<BR>[Called By]<UL><LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Get_SerialNum
-</UL>
-
-<P><STRONG><a name="[97]"></a>SetSysClock</STRONG> (Thumb, 8 bytes, Stack size 8 bytes, system_stm32f10x.o(i.SetSysClock))
-<BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = SetSysClock &rArr; SetSysClockTo72
-</UL>
-<BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetSysClockTo72
-</UL>
-<BR>[Called By]<UL><LI><a href="#[55]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SystemInit
-</UL>
-
-<P><STRONG><a name="[98]"></a>SetSysClockTo72</STRONG> (Thumb, 214 bytes, Stack size 12 bytes, system_stm32f10x.o(i.SetSysClockTo72))
-<BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = SetSysClockTo72
-</UL>
-<BR>[Called By]<UL><LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SetSysClock
 </UL>
 <P>
 <H3>
