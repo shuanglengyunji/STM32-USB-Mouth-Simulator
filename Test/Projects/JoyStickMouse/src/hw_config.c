@@ -404,7 +404,12 @@ void USB_Cable_Config (FunctionalState NewState)
   }
 #endif /* STM32L1XX_MD */
 }
-#if !defined (USE_NUCLEO)
+
+
+
+#if !defined (USE_NUCLEO)	//如果没有定义USE_NUCLEO ， 本项目没有定义USE_NUCLEO，  所以此宏定义判断为 TRUE
+
+
 /**
   * Function Name : JoyState.
   * Description   : Decodes the Joystick direction.
@@ -412,9 +417,16 @@ void USB_Cable_Config (FunctionalState NewState)
   * Output        : None.
   * Return value  : The direction value.
   */
-uint8_t JoyState(void)
+uint8_t JoyState(void)	// 返回被按下的按键的枚举名称
 {
+	
+//****************************************
+// 右键被按下
+	
    /* "right" key is pressed */
+	
+// STM_EVAL_PBGetState 是一个 HAL级 的文件，用于判断板子上对应的按键有没有被按下，最后返回的值还是 JOY_RIGHT 这一类的， 跟这个函数里的内容无关。
+	
 #if !defined(USE_STM32373C_EVAL) && !defined(USE_STM32303C_EVAL)
    if (!STM_EVAL_PBGetState(Button_RIGHT))
 #else
@@ -423,6 +435,10 @@ uint8_t JoyState(void)
      {
        return JOY_RIGHT;
      }
+	 
+//****************************************
+// 左键被按下
+	 
    /* "left" key is pressed */
 #if !defined(USE_STM32373C_EVAL) && !defined(USE_STM32303C_EVAL)
    if (!STM_EVAL_PBGetState(Button_LEFT))
@@ -432,6 +448,10 @@ uint8_t JoyState(void)
      {
        return JOY_LEFT;
      }
+	 
+//****************************************
+// 上键被按下
+	 
    /* "up" key is pressed */
 #if !defined(USE_STM32373C_EVAL) && !defined(USE_STM32303C_EVAL)
    if (!STM_EVAL_PBGetState(Button_UP))    
@@ -441,6 +461,10 @@ uint8_t JoyState(void)
      {
        return JOY_UP;
      }
+	 
+//****************************************
+// 下键被按下
+	 
    /* "down" key is pressed */
 #if !defined(USE_STM32373C_EVAL) && !defined(USE_STM32303C_EVAL)
    if (!STM_EVAL_PBGetState(Button_DOWN))    
@@ -450,6 +474,10 @@ uint8_t JoyState(void)
      {
        return JOY_DOWN;
      }
+	 
+//****************************************
+// 没有按键被按下
+	 
    /* No key is pressed */
      else
      {
@@ -466,27 +494,31 @@ uint8_t JoyState(void)
   */
 void Joystick_Send(uint8_t Keys)
 {
-  uint8_t Mouse_Buffer[4] = {0, 0, 0, 0};
-  int8_t X = 0, Y = 0;
+	uint8_t Mouse_Buffer[4] = {0, 0, 0, 0};
+	int8_t X = 0, Y = 0;
   
-      switch (Keys)
-  {
-    case JOY_LEFT:
-      X -= CURSOR_STEP;
-      break;
-    case JOY_RIGHT:
-
-      X += CURSOR_STEP;
-      break;
-    case JOY_UP:
-      Y -= CURSOR_STEP;
-      break;
-    case JOY_DOWN:
-      Y += CURSOR_STEP;
-      break;
-    default:
-      return;
-  }
+	//根据按键值操作 X Y 的数据， X Y 的数据初始值为0 ， 无记忆.
+	switch (Keys)
+	{
+		case JOY_LEFT:
+			X -= CURSOR_STEP;
+			break;
+		
+		case JOY_RIGHT:
+			X += CURSOR_STEP;
+			break;
+		
+		case JOY_UP:
+			Y -= CURSOR_STEP;
+			break;
+		
+		case JOY_DOWN:
+			Y += CURSOR_STEP;
+			break;
+		
+		default:
+			return;
+	}
   /* prepare buffer to send */
   Mouse_Buffer[1] = X;
   Mouse_Buffer[2] = Y;
@@ -501,7 +533,9 @@ void Joystick_Send(uint8_t Keys)
   SetEPTxValid(ENDP1);
 
 }
+
 #endif /* USE_NUCLEO */
+
 /**
   * Function Name  : Joy_Emul.
   * Description    : Gets Pointer Data

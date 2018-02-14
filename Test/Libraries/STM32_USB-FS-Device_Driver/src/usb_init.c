@@ -85,12 +85,16 @@ USER_STANDARD_REQUESTS  *pUser_Standard_Requests;
   **/
 void USB_Init(void)
 {
-  pInformation = &Device_Info;
-  pInformation->ControlState = 2;
-  pProperty = &Device_Property;
-  pUser_Standard_Requests = &User_Standard_Requests;
-  /* Initialize devices one by one */
-  pProperty->Init();
+	// 配置 Device_Info 结构体
+	pInformation = &Device_Info;
+	pInformation->ControlState = 2;	// 设备类型，2是鼠标
+	
+	pProperty = &Device_Property;
+
+	pUser_Standard_Requests = &User_Standard_Requests;
+	
+	/* Initialize devices one by one */
+	pProperty->Init();
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

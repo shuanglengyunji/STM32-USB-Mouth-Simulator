@@ -48,6 +48,13 @@ RCC_ClocksTypeDef RCC_ClockFreq;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
+/* **************************************************
+ * 
+ *  USE_NUCLEO is only defined in STM32F3 device.
+ *  It is no use in this project.
+ * 
+ * **************************************************/
+
 /*******************************************************************************
 * Function Name  : main.
 * Description    : main routine.
@@ -57,28 +64,24 @@ RCC_ClocksTypeDef RCC_ClockFreq;
 *******************************************************************************/
 int main(void)
 {
-  Set_System();
+	Set_System();	// To open the clock of USB ???
+
+	USB_Interrupts_Config();
+
+	Set_USBClock();
+
+	USB_Init();
   
-  USB_Interrupts_Config();
-  
-  Set_USBClock();
-  
-  USB_Init();
-  
-  while (1)
-  {
-    if (bDeviceState == CONFIGURED)
-    {
-#if defined (USE_NUCLEO)
-      Joy_Emul();
-#else
-      if ((JoyState() != 0) && (PrevXferComplete))
-      {
-        Joystick_Send(JoyState());
-      }
-#endif 
-    } 
-  }
+	while (1)
+	{
+		if (bDeviceState == CONFIGURED)	// 如果USB已经配置成功       CONFIGURED 是枚举类型 _DEVICE_STATE 里的一个值
+		{
+			if ((JoyState() != 0) && (PrevXferComplete))	// 有按键被按下  &&   the current transfer has been complete
+			{
+				Joystick_Send(JoyState());	//发送当前按键状态数据
+			}
+		} 
+	}
 }
 
 #ifdef  USE_FULL_ASSERT

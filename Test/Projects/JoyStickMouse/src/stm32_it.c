@@ -285,6 +285,10 @@ void USBWakeUp_IRQHandler(void)
   EXTI_ClearITPendingBit(EXTI_Line18);
 }
 
+//////////////////////////////////////////////////////////////////////////
+
+// This is the IT config for STM32F1 !!!
+
 #if defined(USE_STM3210E_EVAL)
   #if defined(USB_USE_VBUS_SENSING)
 
