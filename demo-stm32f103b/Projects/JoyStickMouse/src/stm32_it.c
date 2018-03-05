@@ -182,31 +182,11 @@ void SysTick_Handler(void)
   * Output         : None
   * Return         : None
   */
-#if defined(STM32L1XX_MD) || defined(STM32L1XX_HD)|| defined(STM32L1XX_MD_PLUS) || defined(STM32F37X)
-void USB_LP_IRQHandler(void)
-#else
 void USB_LP_CAN1_RX0_IRQHandler(void)
-#endif
 {
   USB_Istr();
 }
 
-#if defined(STM32L1XX_MD) || defined(STM32L1XX_HD)|| defined(STM32L1XX_MD_PLUS)
-
-/**
-  * Function Name  : USB_FS_WKUP_IRQHandler
-  * Description    : This function handles USB WakeUp interrupt request.
-  * Input          : None
-  * Output         : None
-  * Return         : None
-  */
-void USB_FS_WKUP_IRQHandler(void)
-{
-  EXTI_ClearITPendingBit(EXTI_Line18);
-}
-#endif
-
-#if defined (USE_NUCLEO)
 /**
   * Function Name  : EXTI_IRQHandler
   * Description    : This function handles External lines  interrupt request.
@@ -214,45 +194,7 @@ void USB_FS_WKUP_IRQHandler(void)
   * Output         : None
   * Return         : None
   */
-
-void EXTI15_10_IRQHandler(void)
-{
-  if (EXTI_GetITStatus(EXTI_Line13) != RESET)
-  {
-    /* Check if the remote wakeup feature is enabled (it could be disabled 
-        by the host through ClearFeature request) */
-    if ((pInformation->Current_Feature & 0x20) && (DevRemoteWakeup == 0))
-    {      
-      pInformation->Current_Feature &= ~0x20; 
-      /* Set DevRemoteWakeup when doing the remote wakeup */
-      DevRemoteWakeup = 1;
-
-      /* Exit low power mode and re-configure clocks */
-      Resume(RESUME_INTERNAL);
-    }
-  
-    /* Clear the EXTI line pending bit */
-    EXTI_ClearITPendingBit(EXTI_Line13);
-  }
-}
-#endif
-
-#if !defined (USE_NUCLEO)
-/**
-  * Function Name  : EXTI_IRQHandler
-  * Description    : This function handles External lines  interrupt request.
-  * Input          : None
-  * Output         : None
-  * Return         : None
-  */
-
-#if defined(STM32L1XX_MD) || defined(STM32L1XX_HD)|| defined(STM32L1XX_MD_PLUS)
-void EXTI0_IRQHandler(void)
-#elif defined (STM32F37X)
-void EXTI2_TS_IRQHandler(void)
-#else
 void EXTI9_5_IRQHandler(void)
-#endif
 {
   if (EXTI_GetITStatus(KEY_BUTTON_EXTI_LINE) != RESET)
   {
@@ -272,7 +214,7 @@ void EXTI9_5_IRQHandler(void)
     EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
   }
 }
-#endif /* USE_NUCLEO */
+
 /**
   * Function Name  : USBWakeUp_IRQHandler
   * Description    : This function handles USB WakeUp interrupt request.

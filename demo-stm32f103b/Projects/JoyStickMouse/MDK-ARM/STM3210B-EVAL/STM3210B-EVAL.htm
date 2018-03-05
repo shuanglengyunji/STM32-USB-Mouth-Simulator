@@ -3,7 +3,7 @@
 <title>Static Call Graph - [STM3210B-EVAL\STM3210B-EVAL.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image STM3210B-EVAL\STM3210B-EVAL.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060422: Last Updated: Mon Mar 05 09:53:42 2018
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060422: Last Updated: Mon Mar 05 10:39:54 2018
 <BR><P>
 <H3>Maximum Stack Usage =        176 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -337,8 +337,8 @@ Global Symbols
 <P><STRONG><a name="[80]"></a>GPIO_Init</STRONG> (Thumb, 162 bytes, Stack size 20 bytes, stm32f10x_gpio.o(i.GPIO_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = GPIO_Init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_PBInit
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_System
+<BR>[Called By]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_System
+<LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_PBInit
 </UL>
 
 <P><STRONG><a name="[7d]"></a>GPIO_ReadInputDataBit</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, stm32f10x_gpio.o(i.GPIO_ReadInputDataBit))
@@ -358,8 +358,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[54]"></a>GetEPTxAddr</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, usb_regs.o(i.GetEPTxAddr))
-<BR><BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
-<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageIn
+<BR><BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageIn
+<LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
 </UL>
 
 <P><STRONG><a name="[5e]"></a>Get_SerialNum</STRONG> (Thumb, 44 bytes, Stack size 8 bytes, hw_config.o(i.Get_SerialNum))
@@ -498,15 +498,15 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f10x_md.o(RESET)
 </UL>
 <P><STRONG><a name="[a]"></a>NOP_Process</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, usb_core.o(i.NOP_Process))
-<BR>[Address Reference Count : 3]<UL><LI> usb_istr.o(.data)
+<BR>[Address Reference Count : 3]<UL><LI> usb_prop.o(.data)
 <LI> usb_istr.o(.data)
-<LI> usb_prop.o(.data)
+<LI> usb_istr.o(.data)
 </UL>
 <P><STRONG><a name="[83]"></a>NVIC_Init</STRONG> (Thumb, 94 bytes, Stack size 16 bytes, misc.o(i.NVIC_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = NVIC_Init
 </UL>
-<BR>[Called By]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_PBInit
-<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_Interrupts_Config
+<BR>[Called By]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_Interrupts_Config
+<LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_PBInit
 </UL>
 
 <P><STRONG><a name="[8f]"></a>NVIC_PriorityGroupConfig</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, misc.o(i.NVIC_PriorityGroupConfig))
@@ -554,8 +554,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[7f]"></a>RCC_APB2PeriphClockCmd</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, stm32f10x_rcc.o(i.RCC_APB2PeriphClockCmd))
-<BR><BR>[Called By]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_PBInit
-<LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_System
+<BR><BR>[Called By]<UL><LI><a href="#[84]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_System
+<LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_PBInit
 </UL>
 
 <P><STRONG><a name="[87]"></a>RCC_USBCLKConfig</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, stm32f10x_rcc.o(i.RCC_USBCLKConfig))
@@ -630,10 +630,10 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[56]"></a>SetEPTxCount</STRONG> (Thumb, 20 bytes, Stack size 0 bytes, usb_regs.o(i.SetEPTxCount))
-<BR><BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
-<LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Joystick_Reset
+<BR><BR>[Called By]<UL><LI><a href="#[1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Joystick_Reset
 <LI><a href="#[57]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageOut
 <LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageIn
+<LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
 </UL>
 
 <P><STRONG><a name="[68]"></a>SetEPTxStatus</STRONG> (Thumb, 44 bytes, Stack size 0 bytes, usb_regs.o(i.SetEPTxStatus))
@@ -656,11 +656,11 @@ Global Symbols
 <P><STRONG><a name="[84]"></a>Set_System</STRONG> (Thumb, 136 bytes, Stack size 16 bytes, hw_config.o(i.Set_System))
 <BR><BR>[Stack]<UL><LI>Max Depth = 68<LI>Call Chain = Set_System &rArr; STM_EVAL_PBInit &rArr; GPIO_Init
 </UL>
-<BR>[Calls]<UL><LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_PBInit
+<BR>[Calls]<UL><LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EXTI_ClearITPendingBit
+<LI><a href="#[7e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;STM_EVAL_PBInit
 <LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_APB2PeriphClockCmd
 <LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RCC_APB1PeriphClockCmd
 <LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GPIO_Init
-<LI><a href="#[5d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EXTI_ClearITPendingBit
 </UL>
 <BR>[Called By]<UL><LI><a href="#[43]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -825,8 +825,8 @@ Global Symbols
 <P><STRONG><a name="[55]"></a>UserToPMABufferCopy</STRONG> (Thumb, 38 bytes, Stack size 8 bytes, usb_mem.o(i.UserToPMABufferCopy))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = UserToPMABufferCopy
 </UL>
-<BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
-<LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageIn
+<BR>[Called By]<UL><LI><a href="#[53]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DataStageIn
+<LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_SIL_Write
 </UL>
 
 <P><STRONG><a name="[9c]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
