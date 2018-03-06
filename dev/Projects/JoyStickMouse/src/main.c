@@ -113,16 +113,13 @@ int main(void)
 		
 		while(bDeviceState != CONFIGURED){}
 			Rightkey_Send(ENABLE);
-			
 		delay_ms(50);
-			
 		while(bDeviceState != CONFIGURED){}
 			Rightkey_Send(DISABLE);
 
   }
 }
 
-//			while(1);
 //			Joystick_Send(JOY_LEFT);
 
 /**

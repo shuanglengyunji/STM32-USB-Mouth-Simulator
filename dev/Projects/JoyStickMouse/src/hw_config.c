@@ -317,7 +317,6 @@ void Joystick_Send(uint8_t Keys)
       X -= CURSOR_STEP;
       break;
     case JOY_RIGHT:
-
       X += CURSOR_STEP;
       break;
     case JOY_UP:
