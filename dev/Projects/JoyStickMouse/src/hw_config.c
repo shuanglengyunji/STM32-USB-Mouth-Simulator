@@ -54,21 +54,6 @@ static void Delay(__IO uint32_t nTime);
 /* Private functions ---------------------------------------------------------*/
 
 /**
-  * @brief  Inserts a delay time.
-  * @param  nTime: specifies the delay time length, in milliseconds.
-  * @retval None
-  */
-static void delay_ms(u16 time)
-{    
-   u16 i=0;  
-   while(time--)
-   {
-      i=12000;  //自己定义
-      while(i--) ;    
-   }
-}
-
-/**
   * Function Name  : Set_System
   * Description    : Configures Main system clocks & power.
   * Input          : None.
@@ -368,7 +353,33 @@ void Rightkey_Send(u8 en)
 	
   /* Enable endpoint for transmission */
   SetEPTxValid(ENDP1);
+}
 
+/**
+  * Function Name : Leftkey_Send.
+  * Description   : prepares buffer to be sent containing Leftkey event infos.
+  * Input         : u8 en. Input ENABLE to click and DISABLE to loosen.
+  * Output        : None.
+  * Return value  : None.
+  */
+void Leftkey_Send(u8 en)
+{
+  uint8_t Mouse_Buffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+	
+  /* prepare buffer to send */
+	if(en == ENABLE)
+		Mouse_Buffer[0] = 1;	//左键
+	else
+		Mouse_Buffer[0] = 0;
+  
+  /* Reset the control token to inform upper layer that a transfer is ongoing */
+  PrevXferComplete = 0;
+  
+  /* Copy mouse position info in ENDP1 Tx Packet Memory Area*/
+  USB_SIL_Write(EP1_IN, Mouse_Buffer, 4);
+	
+  /* Enable endpoint for transmission */
+  SetEPTxValid(ENDP1);
 }
 
 /**

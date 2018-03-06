@@ -56,12 +56,40 @@ static void SysTick_Init(void);
   */
 static void delay_ms(u16 time)
 {    
-   u16 i=0;  
-   while(time--)
-   {
-      i=12000;  //自己定义
-      while(i--) ;    
-   }
+	u16 i=0;  
+	while(time--)
+	{
+		i=12000;  //自己定义
+		while(i--) ;    
+	}
+}
+
+/**
+  * @brief  Right key.
+  * @param  None
+  * @retval None
+  */
+static void Right_Key(void)
+{
+	while(!PrevXferComplete){}
+		Rightkey_Send(ENABLE);
+
+	while(!PrevXferComplete){}
+		Rightkey_Send(DISABLE);
+}
+
+/**
+  * @brief  Left key.
+  * @param  None
+  * @retval None
+  */
+static void Left_Key(void)
+{
+	while(!PrevXferComplete){}
+		Leftkey_Send(ENABLE);
+
+	while(!PrevXferComplete){}
+		Leftkey_Send(DISABLE);
 }
 
 /*******************************************************************************
@@ -113,11 +141,9 @@ int main(void)
 		{
 			delay_ms(1000);
 			
-			while(!PrevXferComplete){}
-				Rightkey_Send(ENABLE);
-				
-			while(!PrevXferComplete){}
-				Rightkey_Send(DISABLE);
+//			Right_Key();
+			
+			Left_Key();
 		}
   }
 }
