@@ -23,3 +23,8 @@ JLinkLog.txt
 *.map
 *.uvguix.*
 *.scvd
+*.htm
+*.sct
+
+RTE
+DebugConfig
