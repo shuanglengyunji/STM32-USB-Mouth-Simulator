@@ -70,6 +70,8 @@ uint8_t JoyState(void);
 void Get_SerialNum(void);
 void Joy_Emul(void);
 
+void Rightkey_Send(void);
+
 #endif  /*__HW_CONFIG_H*/
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

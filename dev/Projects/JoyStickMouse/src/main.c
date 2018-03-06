@@ -47,6 +47,22 @@ RCC_ClocksTypeDef RCC_ClockFreq;
 /* Extern variables ----------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
+static void SysTick_Init(void);
+
+/**
+  * @brief  Inserts a delay time.
+  * @param  nTime: specifies the delay time length, in milliseconds.
+  * @retval None
+  */
+static void delay_ms(u16 time)
+{    
+   u16 i=0;  
+   while(time--)
+   {
+      i=12000;  //自己定义
+      while(i--) ;    
+   }
+}
 
 /*******************************************************************************
 * Function Name  : main.
@@ -57,24 +73,80 @@ RCC_ClocksTypeDef RCC_ClockFreq;
 *******************************************************************************/
 int main(void)
 {
+	/*
+		1.Enable the PWR clock
+		2.Configure USB DM/DP pins
+		3.Enable the USB PULL UP
+		4.Configure the Joystick buttons in GPIO mode
+		5.Configure the EXTI line 18 connected internally to the USB IP
+		6.Configure Key push-button for remote wakeup
+	*/
   Set_System();
   
+	/*
+		2 bit for pre-emption priority, 2 bits for subpriority
+		Enable the USB interrupt
+		Enable the USB Wake-up interrupt
+		Enable the Key EXTI line Interrupt
+	*/
   USB_Interrupts_Config();
-  
+	
+	/*
+		Select USB clock source and Init it.
+	*/
   Set_USBClock();
-  
+	
+	/*
+		Init USB peripheral and Begin to communicate with computer.
+		The usb peripheral was enabled at this time.
+	*/
   USB_Init();
+	
+	/*
+		Init and enable Systick.
+	*/
+	SysTick_Init();
   
   while (1)
   {
     if (bDeviceState == CONFIGURED)
     {
-      if ((JoyState() != 0) && (PrevXferComplete))
-      {
-        //Joystick_Send(JoyState());
-      } 
+//				Delay(0xFFFF);
+//				Rightkey_Send();
+//				while(1);
+			
+//			Joystick_Send(JOY_LEFT);
     } 
   }
+}
+
+/**
+  * @brief  启动系统滴答定时器 SysTick
+  * @param  无
+  * @retval 无
+  */
+/*******************************************************************************
+* Function Name  : SysTick_Init
+* Description    : Config and start SysTick
+* Input          : None
+* Output         : None
+* Return         : None
+*******************************************************************************/
+static void SysTick_Init(void)
+{
+	/* SystemCoreClock / 1000    1ms中断一次
+	 * SystemCoreClock / 100000	 10us中断一次
+	 * SystemCoreClock / 1000000 1us中断一次
+	 */
+
+	if (SysTick_Config(SystemCoreClock / 1000))	// ST3.5.0库版本
+	{ 
+		/* Capture error */ 
+		while (1);
+	}
+	
+//	SysTick->CTRL &= ~ SysTick_CTRL_ENABLE_Msk;	// 关闭滴答定时器  
+	SysTick->CTRL |=  SysTick_CTRL_ENABLE_Msk;	// 使能滴答定时器
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -99,3 +171,9 @@ void assert_failed(uint8_t* file, uint32_t line)
 #endif
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+
+//      if ((JoyState() != 0) && (PrevXferComplete))
+//      {
+//        //Joystick_Send(JoyState());
+//      } 

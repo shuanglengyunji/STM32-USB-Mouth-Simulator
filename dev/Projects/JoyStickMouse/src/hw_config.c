@@ -70,35 +70,20 @@ void Set_System(void)
      */ 
   
   /******************************************/
-  /*           Enable the PWR clock         */
+  /*  1.Enable the PWR clock         		*/
   /******************************************/
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
   
-#if defined(STM32L1XX_MD) || defined(STM32L1XX_HD) || defined(STM32F37X) || defined(STM32F303xC) || defined(STM32F303xE) || defined(STM32F302x8)
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOA, ENABLE);
-
-#else /* defined(STM32F10X_HD) || defined(STM32F10X_MD) defined(STM32F10X_XL)*/
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
-#endif
   
   /********************************************/
-  /*  Configure USB DM/DP pins                */
+  /*  2.Configure USB DM/DP pins                */
   /********************************************/
-  
-#if defined(STM32L1XX_MD) || defined(STM32L1XX_HD)
   
   /* Configure USB DM/DP pin. This is optional, and maintained only for user guidance.
   For the STM32L products there is no need to configure the PA12/PA11 pins couple 
   as Alternate Function */
-  
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_40MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_All;
 
-#elif defined(STM32F10X_HD) || defined(STM32F10X_MD)  || defined(STM32F10X_XL)
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
@@ -106,94 +91,24 @@ void Set_System(void)
   
   /* Enable all GPIOs Clock*/
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ALLGPIO, ENABLE);
-  
-  #if defined(USB_USE_VBUS_SENSING)
-  
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIO_USB_VBUS_SENSING | RCC_APB2Periph_AFIO, ENABLE);  
-  GPIO_InitStructure.GPIO_Pin   = USB_VBUS_SENSING_PIN;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_Mode  = GPIO_Mode_IN_FLOATING;
-  GPIO_Init(USB_VBUS_SENSING_PORT, &GPIO_InitStructure);
-  
-  #endif /* USB_USE_VBUS_SENSING */
-
-#else /* defined(STM32F37X) || defined(STM32F303xC) */
-  
-  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(GPIOA, &GPIO_InitStructure);
-    
-  /*SET PA11,12 for USB: USB_DM,DP*/
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource11, GPIO_AF_14);
-  GPIO_PinAFConfig(GPIOA, GPIO_PinSource12, GPIO_AF_14);
-  
-#endif 
-
 
   /********************************************/
-  /* Enable the USB PULL UP                   */
+  /*  3.Enable the USB PULL UP                 */
   /********************************************/
-#if defined(STM32L1XX_MD) || defined(STM32L1XX_HD)
   
-  /* Enable integrated STM32L15xx internal pull up 
-  Enable the SYSCFG module clock*/
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
-  
-#elif defined(STM32F10X_HD) || defined(STM32F10X_MD)  || defined(STM32F10X_XL)
-  
-  /* USB_DISCONNECT used as USB pull-up */
-  GPIO_InitStructure.GPIO_Pin = USB_DISCONNECT_PIN;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_OD;
-  GPIO_Init(USB_DISCONNECT, &GPIO_InitStructure);
-  
-  /* Enable the USB disconnect GPIO clock */
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIO_DISCONNECT, ENABLE);
-  
-#elif defined(STM32F37X) || defined(STM32F303xC)
-  
-  /* Enable the USB disconnect GPIO clock */
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIO_DISCONNECT, ENABLE);
-
-  /* USB_DISCONNECT used as USB pull-up */
-  GPIO_InitStructure.GPIO_Pin = USB_DISCONNECT_PIN;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_OD;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(USB_DISCONNECT, &GPIO_InitStructure);
-  
-#else /* USE_NUCLEO*/
-  
-   /* Enable the USB disconnect GPIO clock */
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIO_DISCONNECT, ENABLE);
-
-  /* USB_DISCONNECT used as USB pull-up */
-  GPIO_InitStructure.GPIO_Pin = USB_DISCONNECT_PIN;
-  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-  GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-  GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_NOPULL;
-  GPIO_Init(USB_DISCONNECT, &GPIO_InitStructure); 
- 
-#endif
-#if ! defined(USE_NUCLEO)
   /****************************************************/
-  /*  Configure the Joystick buttons in GPIO mode     */
+  /*  4.Configure the Joystick buttons in GPIO mode     */
   /****************************************************/
   
   STM_EVAL_PBInit(Button_RIGHT, Mode_GPIO);
   STM_EVAL_PBInit(Button_LEFT, Mode_GPIO);
   STM_EVAL_PBInit(Button_UP, Mode_GPIO);
   STM_EVAL_PBInit(Button_DOWN, Mode_GPIO);
-#endif /* USE_NUCLEO */  
+
 #ifdef USB_LOW_PWR_MGMT_SUPPORT
   
   /**********************************************************************/
-  /*  Configure the EXTI line 18 connected internally to the USB IP     */
+  /*  5.Configure the EXTI line 18 connected internally to the USB IP   */
   /**********************************************************************/
   
   EXTI_ClearITPendingBit(EXTI_Line18);
@@ -205,35 +120,13 @@ void Set_System(void)
 
 #endif  /* USB_LOW_PWR_MGMT_SUPPORT */
   
-#if defined (USE_NUCLEO)  
   /****************************************************/
-  /*  Configure Key push-button for remote wakeup     */
+  /*  6.Configure Key push-button for remote wakeup     */
   /****************************************************/
-  
-  EXTI_InitTypeDef EXTI_InitStructure;
-  
-  RCC_AHBPeriphClockCmd(RCC_AHBPeriph_GPIOC, ENABLE);
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
-  
-  /* Connect Button EXTI Line to Button GPIO Pin */
-  SYSCFG_EXTILineConfig(EXTI_PortSourceGPIOC, EXTI_PinSource13);
-  
-  /* Configure Button EXTI line */
-  EXTI_InitStructure.EXTI_Line = EXTI_Line13;
-  EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt;
-  
-  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising;  
-  
-  EXTI_InitStructure.EXTI_LineCmd = ENABLE;
-  EXTI_Init(&EXTI_InitStructure);
-  
-  
-  EXTI_ClearITPendingBit(EXTI_Line13);
-#else
   
   STM_EVAL_PBInit(Button_KEY, Mode_EXTI);
   EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
-#endif /* USE_NUCLEO */
+
 } 
  
 /**
@@ -245,18 +138,11 @@ void Set_System(void)
   */
 void Set_USBClock(void)
 {
-#if defined(STM32L1XX_MD) || defined(STM32L1XX_HD)|| defined(STM32L1XX_MD_PLUS)
-  /* Enable USB clock */
-  RCC_APB1PeriphClockCmd(RCC_APB1Periph_USB, ENABLE);
-
-#else
   /* Select USBCLK source */
   RCC_USBCLKConfig(RCC_USBCLKSource_PLLCLK_1Div5);
   
   /* Enable the USB clock */
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_USB, ENABLE);
-#endif /* STM32L1XX_XD */
-
 }
 
 /**
@@ -304,39 +190,6 @@ void USB_Interrupts_Config(void)
 
   /* 2 bit for pre-emption priority, 2 bits for subpriority */
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
- 
-#if defined(STM32L1XX_MD)|| defined(STM32L1XX_HD) || defined(STM32L1XX_MD_PLUS)
-  /* Enable the USB interrupt */
-  NVIC_InitStructure.NVIC_IRQChannel = USB_LP_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-#ifdef USB_LOW_PWR_MGMT_SUPPORT
-  /* Enable the USB Wake-up interrupt */
-  NVIC_InitStructure.NVIC_IRQChannel = USB_FS_WKUP_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-#endif /* USB_LOW_PWR_MGMT_SUPPORT */
-  
-#elif defined(STM32F37X)
-  /* Enable the USB interrupt */
-  NVIC_InitStructure.NVIC_IRQChannel = USB_LP_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
-  NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-
-#ifdef USB_LOW_PWR_MGMT_SUPPORT
-  /* Enable the USB Wake-up interrupt */
-  NVIC_InitStructure.NVIC_IRQChannel = USBWakeUp_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-  NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-  NVIC_Init(&NVIC_InitStructure);
-#endif /* USB_LOW_PWR_MGMT_SUPPORT */
-  
-#else /* USE_STM3210B_EVAL or USE_STM3210E_EVAL */
   
   /* Enable the USB interrupt */
   NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
@@ -353,14 +206,11 @@ void USB_Interrupts_Config(void)
   NVIC_Init(&NVIC_InitStructure); 
 #endif /* USB_LOW_PWR_MGMT_SUPPORT */ 
   
-#endif
-#if !defined (USE_NUCLEO) 
-  
   /* Enable the Key EXTI line Interrupt */
   NVIC_InitStructure.NVIC_IRQChannel = KEY_BUTTON_EXTI_IRQn;
   NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
   NVIC_Init(&NVIC_InitStructure);
-#endif
+
 }
 
 /**
@@ -372,39 +222,16 @@ void USB_Interrupts_Config(void)
   */
 void USB_Cable_Config (FunctionalState NewState)
 {
-#if defined(STM32L1XX_MD) || defined(STM32L1XX_HD)|| defined(STM32L1XX_MD_PLUS)
   if (NewState != DISABLE)
   {
-    STM32L15_USB_CONNECT;
+
   }
   else
   {
-    STM32L15_USB_DISCONNECT;
-  }  
-   
-#elif defined (USE_NUCLEO)
-  
-  if (NewState == DISABLE)
-  {
-    GPIO_ResetBits(USB_DISCONNECT, USB_DISCONNECT_PIN);
+
   }
-  else
-  {
-    GPIO_SetBits(USB_DISCONNECT, USB_DISCONNECT_PIN);
-  }
-#else  
-  
-  if (NewState != DISABLE)
-  {
-    GPIO_ResetBits(USB_DISCONNECT, USB_DISCONNECT_PIN);
-  }
-  else
-  {
-    GPIO_SetBits(USB_DISCONNECT, USB_DISCONNECT_PIN);
-  }
-#endif /* STM32L1XX_MD */
 }
-#if !defined (USE_NUCLEO)
+
 /**
   * Function Name : JoyState.
   * Description   : Decodes the Joystick direction.
@@ -469,7 +296,7 @@ void Joystick_Send(uint8_t Keys)
   uint8_t Mouse_Buffer[4] = {0, 0, 0, 0};
   int8_t X = 0, Y = 0;
   
-      switch (Keys)
+  switch (Keys)
   {
     case JOY_LEFT:
       X -= CURSOR_STEP;
@@ -501,7 +328,35 @@ void Joystick_Send(uint8_t Keys)
   SetEPTxValid(ENDP1);
 
 }
-#endif /* USE_NUCLEO */
+
+/**
+  * Function Name : Rightkey_Send.
+  * Description   : prepares buffer to be sent containing Rightkey event infos.
+  * Input         : None.
+  * Output        : None.
+  * Return value  : None.
+  */
+void Rightkey_Send(void)
+{
+  uint8_t Mouse_Buffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+	
+  /* prepare buffer to send */
+  Mouse_Buffer[0] = 2;	//ср╪Э
+  Mouse_Buffer[1] = 0;
+  Mouse_Buffer[2] = 0;
+  Mouse_Buffer[3] = 0;
+  
+  /* Reset the control token to inform upper layer that a transfer is ongoing */
+  PrevXferComplete = 0;
+  
+  /* Copy mouse position info in ENDP1 Tx Packet Memory Area*/
+  USB_SIL_Write(EP1_IN, Mouse_Buffer, 4);
+	
+  /* Enable endpoint for transmission */
+  SetEPTxValid(ENDP1);
+
+}
+
 /**
   * Function Name  : Joy_Emul.
   * Description    : Gets Pointer Data
