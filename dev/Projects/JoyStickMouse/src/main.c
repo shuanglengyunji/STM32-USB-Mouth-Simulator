@@ -109,14 +109,16 @@ int main(void)
   
   while (1)
   {
-		delay_ms(1000);
-		
-		while(bDeviceState != CONFIGURED){}
-			Rightkey_Send(ENABLE);
-		delay_ms(50);
-		while(bDeviceState != CONFIGURED){}
-			Rightkey_Send(DISABLE);
-
+		if(bDeviceState == CONFIGURED)
+		{
+			delay_ms(1000);
+			
+			while(!PrevXferComplete){}
+				Rightkey_Send(ENABLE);
+				
+			while(!PrevXferComplete){}
+				Rightkey_Send(DISABLE);
+		}
   }
 }
 
@@ -174,8 +176,3 @@ void assert_failed(uint8_t* file, uint32_t line)
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 
-
-//      if ((JoyState() != 0) && (PrevXferComplete))
-//      {
-//        //Joystick_Send(JoyState());
-//      } 
