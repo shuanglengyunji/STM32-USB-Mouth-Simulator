@@ -70,7 +70,7 @@ uint8_t JoyState(void);
 void Get_SerialNum(void);
 void Joy_Emul(void);
 
-void Rightkey_Send(void);
+void Rightkey_Send(u8 en);
 
 #endif  /*__HW_CONFIG_H*/
 

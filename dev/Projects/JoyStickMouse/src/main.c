@@ -109,16 +109,21 @@ int main(void)
   
   while (1)
   {
-    if (bDeviceState == CONFIGURED)
-    {
-//				Delay(0xFFFF);
-//				Rightkey_Send();
-//				while(1);
+		delay_ms(1000);
+		
+		while(bDeviceState != CONFIGURED){}
+			Rightkey_Send(ENABLE);
 			
-//			Joystick_Send(JOY_LEFT);
-    } 
+		delay_ms(50);
+			
+		while(bDeviceState != CONFIGURED){}
+			Rightkey_Send(DISABLE);
+
   }
 }
+
+//			while(1);
+//			Joystick_Send(JOY_LEFT);
 
 /**
   * @brief  启动系统滴答定时器 SysTick

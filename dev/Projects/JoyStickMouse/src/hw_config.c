@@ -54,6 +54,21 @@ static void Delay(__IO uint32_t nTime);
 /* Private functions ---------------------------------------------------------*/
 
 /**
+  * @brief  Inserts a delay time.
+  * @param  nTime: specifies the delay time length, in milliseconds.
+  * @retval None
+  */
+static void delay_ms(u16 time)
+{    
+   u16 i=0;  
+   while(time--)
+   {
+      i=12000;  //自己定义
+      while(i--) ;    
+   }
+}
+
+/**
   * Function Name  : Set_System
   * Description    : Configures Main system clocks & power.
   * Input          : None.
@@ -332,19 +347,19 @@ void Joystick_Send(uint8_t Keys)
 /**
   * Function Name : Rightkey_Send.
   * Description   : prepares buffer to be sent containing Rightkey event infos.
-  * Input         : None.
+  * Input         : u8 en. Input ENABLE to click and DISABLE to loosen.
   * Output        : None.
   * Return value  : None.
   */
-void Rightkey_Send(void)
+void Rightkey_Send(u8 en)
 {
   uint8_t Mouse_Buffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 	
   /* prepare buffer to send */
-  Mouse_Buffer[0] = 2;	//右键
-  Mouse_Buffer[1] = 0;
-  Mouse_Buffer[2] = 0;
-  Mouse_Buffer[3] = 0;
+	if(en == ENABLE)
+		Mouse_Buffer[0] = 2;	//右键
+	else
+		Mouse_Buffer[0] = 0;
   
   /* Reset the control token to inform upper layer that a transfer is ongoing */
   PrevXferComplete = 0;
