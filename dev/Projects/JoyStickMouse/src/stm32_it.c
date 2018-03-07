@@ -188,34 +188,6 @@ void USB_LP_CAN1_RX0_IRQHandler(void)
 }
 
 /**
-  * Function Name  : EXTI_IRQHandler
-  * Description    : This function handles External lines  interrupt request.
-  * Input          : None
-  * Output         : None
-  * Return         : None
-  */
-void EXTI9_5_IRQHandler(void)
-{
-  if (EXTI_GetITStatus(KEY_BUTTON_EXTI_LINE) != RESET)
-  {
-    /* Check if the remote wakeup feature is enabled (it could be disabled 
-        by the host through ClearFeature request) */
-    if ((pInformation->Current_Feature & 0x20) && (DevRemoteWakeup == 0))
-    {      
-      pInformation->Current_Feature &= ~0x20; 
-      /* Set DevRemoteWakeup when doing the remote wakeup */
-      DevRemoteWakeup = 1;
-
-      /* Exit low power mode and re-configure clocks */
-      Resume(RESUME_INTERNAL);
-    }
-  
-    /* Clear the EXTI line pending bit */
-    EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
-  }
-}
-
-/**
   * Function Name  : USBWakeUp_IRQHandler
   * Description    : This function handles USB WakeUp interrupt request.
   * Input          : None
@@ -226,35 +198,5 @@ void USBWakeUp_IRQHandler(void)
 {
   EXTI_ClearITPendingBit(EXTI_Line18);
 }
-
-//		#if defined(USE_STM3210E_EVAL)
-//			#if defined(USB_USE_VBUS_SENSING)
-
-//		/**
-//			* Function Name  : EXTI_IRQHandler
-//			* Description    : This function handles External lines  interrupt request for VBUS.
-//			* Input          : None
-//			* Output         : None
-//			* Return         : None
-//			*/
-//		void EXTI0_IRQHandler(void)
-//		{
-//			/* Check The presence of VBUS */ 
-//			if (GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_0) == SET) 
-//			{
-//				/* Normal USB operation: call USB_Init when cable connection */
-//				USB_Init();
-//			}
-//			else
-//			{
-//				/* Stop USB operation: call PowerOff when cable is disconected*/
-//				PowerOff();
-//			}
-//			
-//			EXTI_ClearITPendingBit(EXTI_Line0); 
-//		}
-
-//			#endif /* USB_USE_VBUS_SENSING */
-//		#endif /* USE_STM3210E_EVAL */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

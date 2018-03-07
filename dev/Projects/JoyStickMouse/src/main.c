@@ -138,14 +138,13 @@ int main(void)
 		3.Enable the USB PULL UP
 		4.Configure the Joystick buttons in GPIO mode
 		5.Configure the EXTI line 18 connected internally to the USB IP
-		6.Configure Key push-button for remote wakeup
 	*/
 	Set_System();
   
 	/*
 		2 bit for pre-emption priority, 2 bits for subpriority
 		Enable the USB interrupt
-		Enable the USB Wake-up interrupt
+		Enable the USB Wake-up interrupt(Internal interrupr)
 		Enable the Key EXTI line Interrupt
 	*/
 	USB_Interrupts_Config();

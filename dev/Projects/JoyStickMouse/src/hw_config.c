@@ -119,13 +119,6 @@ void Set_System(void)
   EXTI_Init(&EXTI_InitStructure);
 
 #endif  /* USB_LOW_PWR_MGMT_SUPPORT */
-  
-  /****************************************************/
-  /*  6.Configure Key push-button for remote wakeup     */
-  /****************************************************/
-  
-  STM_EVAL_PBInit(Button_KEY, Mode_EXTI);
-  EXTI_ClearITPendingBit(KEY_BUTTON_EXTI_LINE);
 
 } 
  
@@ -205,11 +198,6 @@ void USB_Interrupts_Config(void)
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_Init(&NVIC_InitStructure); 
 #endif /* USB_LOW_PWR_MGMT_SUPPORT */ 
-  
-  /* Enable the Key EXTI line Interrupt */
-  NVIC_InitStructure.NVIC_IRQChannel = KEY_BUTTON_EXTI_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-  NVIC_Init(&NVIC_InitStructure);
 
 }
 
