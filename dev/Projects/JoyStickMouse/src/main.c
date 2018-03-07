@@ -92,6 +92,37 @@ static void Left_Key(void)
 		Leftkey_Send(DISABLE);
 }
 
+/**
+  * @brief  Move.
+  * @param  u8 Direction.
+  * @retval None
+  */
+static void Move(u8 Direction)
+{
+	while(!PrevXferComplete){}
+	switch(Direction)
+	{
+		case UP:
+			Joystick_Send(JOY_UP);
+		break;
+		
+		case DOWN:
+			Joystick_Send(JOY_DOWN);
+		break;
+		
+		case LEFT:
+			Joystick_Send(JOY_LEFT);
+		break;
+		
+		case RIGHT:
+			Joystick_Send(JOY_RIGHT);
+		break;
+		
+		default:
+			return;
+	}
+}
+
 /*******************************************************************************
 * Function Name  : main.
 * Description    : main routine.
@@ -109,7 +140,7 @@ int main(void)
 		5.Configure the EXTI line 18 connected internally to the USB IP
 		6.Configure Key push-button for remote wakeup
 	*/
-  Set_System();
+	Set_System();
   
 	/*
 		2 bit for pre-emption priority, 2 bits for subpriority
@@ -117,26 +148,26 @@ int main(void)
 		Enable the USB Wake-up interrupt
 		Enable the Key EXTI line Interrupt
 	*/
-  USB_Interrupts_Config();
+	USB_Interrupts_Config();
 	
 	/*
 		Select USB clock source and Init it.
 	*/
-  Set_USBClock();
+	Set_USBClock();
 	
 	/*
 		Init USB peripheral and Begin to communicate with computer.
 		The usb peripheral was enabled at this time.
 	*/
-  USB_Init();
+	USB_Init();
 	
 	/*
 		Init and enable Systick.
 	*/
 	SysTick_Init();
   
-  while (1)
-  {
+	while (1)
+	{
 		if(bDeviceState == CONFIGURED)
 		{
 			delay_ms(1000);
@@ -145,7 +176,7 @@ int main(void)
 			
 			Left_Key();
 		}
-  }
+	}
 }
 
 //			Joystick_Send(JOY_LEFT);

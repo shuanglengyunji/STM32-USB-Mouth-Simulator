@@ -241,47 +241,35 @@ void USB_Cable_Config (FunctionalState NewState)
   */
 uint8_t JoyState(void)
 {
-   /* "right" key is pressed */
-#if !defined(USE_STM32373C_EVAL) && !defined(USE_STM32303C_EVAL)
-   if (!STM_EVAL_PBGetState(Button_RIGHT))
-#else
-     if (STM_EVAL_PBGetState(Button_RIGHT))
-#endif
-     {
-       return JOY_RIGHT;
-     }
-   /* "left" key is pressed */
-#if !defined(USE_STM32373C_EVAL) && !defined(USE_STM32303C_EVAL)
-   if (!STM_EVAL_PBGetState(Button_LEFT))
-#else
-     if (STM_EVAL_PBGetState(Button_LEFT))
-#endif
-     {
-       return JOY_LEFT;
-     }
-   /* "up" key is pressed */
-#if !defined(USE_STM32373C_EVAL) && !defined(USE_STM32303C_EVAL)
-   if (!STM_EVAL_PBGetState(Button_UP))    
-#else
-     if (STM_EVAL_PBGetState(Button_UP))    
-#endif
-     {
-       return JOY_UP;
-     }
-   /* "down" key is pressed */
-#if !defined(USE_STM32373C_EVAL) && !defined(USE_STM32303C_EVAL)
-   if (!STM_EVAL_PBGetState(Button_DOWN))    
-#else
-     if (STM_EVAL_PBGetState(Button_DOWN))
-#endif
-     {
-       return JOY_DOWN;
-     }
-   /* No key is pressed */
-     else
-     {
-       return 0;
-     } 
+	/* "right" key is pressed */
+	if (STM_EVAL_PBGetState(Button_RIGHT))
+	{
+		return JOY_RIGHT;
+	}
+	
+	/* "left" key is pressed */
+	if (STM_EVAL_PBGetState(Button_LEFT))
+	{
+	return JOY_LEFT;
+	}
+	
+	/* "up" key is pressed */
+	if (STM_EVAL_PBGetState(Button_UP))
+	{
+		return JOY_UP;
+	}
+	
+	/* "down" key is pressed */
+	if (STM_EVAL_PBGetState(Button_DOWN))
+	{
+		return JOY_DOWN;
+	}
+	
+	/* No key is pressed */
+	else
+	{
+		return 0;
+	} 
 }
 
 /**
@@ -385,6 +373,7 @@ void Leftkey_Send(u8 en)
 /**
   * Function Name  : Joy_Emul.
   * Description    : Gets Pointer Data
+					Emul = Emulate, means a simulator. This function draw a square with the mouse it controled. 
   * Input          : None.
   * Output         : None.
   * Return         : None.
@@ -396,7 +385,7 @@ void Joy_Emul(void)
   static uint8_t Sens = 0;
   static uint8_t Step = 0;
   
-  Delay(0x0FFFF);
+  Delay(0x0FFFF);	//这个函数默认自己会被不间断循环调用，所以需要延时一段时间防止鼠标运动过快
   
   if (Step == 35)
   {
