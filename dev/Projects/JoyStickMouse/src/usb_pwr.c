@@ -140,11 +140,11 @@ void Suspend(void)
 {
   uint32_t i =0;
   uint16_t wCNTR;
+	
 #ifdef USB_LOW_PWR_MGMT_SUPPORT
   uint32_t tmpreg = 0;
   __IO uint32_t savePWR_CR=0;
-#endif
-
+#endif /* USB_LOW_PWR_MGMT_SUPPORT */
   
   /* suspend preparation */
   /* ... */

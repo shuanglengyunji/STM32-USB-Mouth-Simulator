@@ -199,4 +199,27 @@ void USBWakeUp_IRQHandler(void)
   EXTI_ClearITPendingBit(EXTI_Line18);
 }
 
+/**
+  * Function Name  : USART1_IRQHandler
+  * Description    : This function handles Usart1 interrupt request.
+  * Input          : None
+  * Output         : None
+  * Return         : None
+  */
+void USART1_IRQHandler(void)
+{
+	uint8_t ch;
+	
+	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
+	{ 	
+	    //ch = USART1->DR;
+		ch = USART_ReceiveData(USART1);
+		
+		//把接收到的东西发回去
+		while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);	/* 等待发送完毕 */
+		USART_SendData(USART1, (uint8_t) ch);							/* 发送一个字节数据到USART1 */
+
+	} 
+}
+
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

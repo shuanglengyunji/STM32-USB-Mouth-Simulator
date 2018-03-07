@@ -231,37 +231,6 @@ typedef enum
   * @}
   */ 
 
-/** @addtogroup STM3210B_EVAL_LOW_LEVEL_COM
-  * @{
-  */
-#define COMn                             2
-
-/**
- * @brief Definition for COM port1, connected to USART1
- */ 
-#define EVAL_COM1                        USART1
-#define EVAL_COM1_CLK                    RCC_APB2Periph_USART1
-#define EVAL_COM1_TX_PIN                 GPIO_Pin_9
-#define EVAL_COM1_TX_GPIO_PORT           GPIOA
-#define EVAL_COM1_TX_GPIO_CLK            RCC_APB2Periph_GPIOA
-#define EVAL_COM1_RX_PIN                 GPIO_Pin_10
-#define EVAL_COM1_RX_GPIO_PORT           GPIOA
-#define EVAL_COM1_RX_GPIO_CLK            RCC_APB2Periph_GPIOA
-#define EVAL_COM1_IRQn                   USART1_IRQn
-
-/**
- * @brief Definition for COM port2, connected to USART2 (USART2 pins remapped on GPIOD)
- */ 
-#define EVAL_COM2                        USART2
-#define EVAL_COM2_CLK                    RCC_APB1Periph_USART2
-#define EVAL_COM2_TX_PIN                 GPIO_Pin_5
-#define EVAL_COM2_TX_GPIO_PORT           GPIOD
-#define EVAL_COM2_TX_GPIO_CLK            RCC_APB2Periph_GPIOD
-#define EVAL_COM2_RX_PIN                 GPIO_Pin_6
-#define EVAL_COM2_RX_GPIO_PORT           GPIOD
-#define EVAL_COM2_RX_GPIO_CLK            RCC_APB2Periph_GPIOD
-#define EVAL_COM2_IRQn                   USART2_IRQn
-
 /**
   * @}
   */
@@ -284,7 +253,7 @@ void STM_EVAL_LEDToggle(Led_TypeDef Led);
 void STM_EVAL_PBInit(Button_TypeDef Button, ButtonMode_TypeDef Button_Mode);
 uint32_t STM_EVAL_PBGetState(Button_TypeDef Button);
 
-void STM_EVAL_COMInit(COM_TypeDef COM, USART_InitTypeDef* USART_InitStruct);
+void STM_EVAL_COM1_Init(void);
  
 /**
   * @}

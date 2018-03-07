@@ -120,6 +120,12 @@ void Set_System(void)
 
 #endif  /* USB_LOW_PWR_MGMT_SUPPORT */
 
+  /**********************************************************************/
+  /*  6.Init Usart1 in EXIT mode									    */
+  /**********************************************************************/
+  
+  STM_EVAL_COM1_Init();
+
 } 
  
 /**
@@ -186,7 +192,7 @@ void USB_Interrupts_Config(void)
   
   /* Enable the USB interrupt */
   NVIC_InitStructure.NVIC_IRQChannel = USB_LP_CAN1_RX0_IRQn;
-  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 5;
+  NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 5;		//这个优先级配的比较低，可能是希望USB在后台工作不要打断其他中断
   NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
   NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
   NVIC_Init(&NVIC_InitStructure);

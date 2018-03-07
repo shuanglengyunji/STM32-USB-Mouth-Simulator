@@ -137,7 +137,8 @@ int main(void)
 		2.Configure USB DM/DP pins
 		3.Enable the USB PULL UP
 		4.Configure the Joystick buttons in GPIO mode
-		5.Configure the EXTI line 18 connected internally to the USB IP
+		5.Configure the EXTI line 18 connected internally to the USB IP (If defined USB_LOW_PWR_MGMT_SUPPORT)
+		6.Init Usart1 in EXIT mode
 	*/
 	Set_System();
   
@@ -164,7 +165,7 @@ int main(void)
 		Init and enable Systick.
 	*/
 	SysTick_Init();
-  
+	
 	while (1)
 	{
 		if(bDeviceState == CONFIGURED)
@@ -177,8 +178,6 @@ int main(void)
 		}
 	}
 }
-
-//			Joystick_Send(JOY_LEFT);
 
 /**
   * @brief  启动系统滴答定时器 SysTick
