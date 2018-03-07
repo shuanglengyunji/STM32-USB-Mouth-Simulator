@@ -100,10 +100,7 @@ void Set_System(void)
   /*  4.Configure the Joystick buttons in GPIO mode     */
   /****************************************************/
   
-  STM_EVAL_PBInit(Button_RIGHT, Mode_GPIO);
-  STM_EVAL_PBInit(Button_LEFT, Mode_GPIO);
-  STM_EVAL_PBInit(Button_UP, Mode_GPIO);
-  STM_EVAL_PBInit(Button_DOWN, Mode_GPIO);
+  STM_EVAL_PBInit();
 
 #ifdef USB_LOW_PWR_MGMT_SUPPORT
   
@@ -235,35 +232,37 @@ void USB_Cable_Config (FunctionalState NewState)
   */
 uint8_t JoyState(void)
 {
-	/* "right" key is pressed */
-	if (STM_EVAL_PBGetState(Button_RIGHT))
-	{
-		return JOY_RIGHT;
-	}
-	
-	/* "left" key is pressed */
-	if (STM_EVAL_PBGetState(Button_LEFT))
-	{
-	return JOY_LEFT;
-	}
-	
-	/* "up" key is pressed */
-	if (STM_EVAL_PBGetState(Button_UP))
-	{
-		return JOY_UP;
-	}
-	
-	/* "down" key is pressed */
-	if (STM_EVAL_PBGetState(Button_DOWN))
-	{
-		return JOY_DOWN;
-	}
-	
-	/* No key is pressed */
-	else
-	{
-		return 0;
-	} 
+//	/* "right" key is pressed */
+//	if (STM_EVAL_PBGetState(Button_RIGHT))
+//	{
+//		return JOY_RIGHT;
+//	}
+//	
+//	/* "left" key is pressed */
+//	if (STM_EVAL_PBGetState(Button_LEFT))
+//	{
+//	return JOY_LEFT;
+//	}
+//	
+//	/* "up" key is pressed */
+//	if (STM_EVAL_PBGetState(Button_UP))
+//	{
+//		return JOY_UP;
+//	}
+//	
+//	/* "down" key is pressed */
+//	if (STM_EVAL_PBGetState(Button_DOWN))
+//	{
+//		return JOY_DOWN;
+//	}
+//	
+//	/* No key is pressed */
+//	else
+//	{
+//		return 0;
+//	} 
+
+	return 0;
 }
 
 /**

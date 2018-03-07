@@ -37,21 +37,6 @@
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
-/* Button Defines Legacy */ 
-#define Button_WAKEUP        BUTTON_WAKEUP
-#define Button_TAMPER        BUTTON_TAMPER
-#define Button_KEY           BUTTON_KEY
-#define Button_RIGHT         BUTTON_RIGHT
-#define Button_LEFT          BUTTON_LEFT
-#define Button_UP            BUTTON_UP
-#define Button_DOWN          BUTTON_DOWN
-#define Button_SEL           BUTTON_SEL
-#define Mode_GPIO            BUTTON_MODE_GPIO
-#define Mode_EXTI            BUTTON_MODE_EXTI
-#define Button_Mode_TypeDef  ButtonMode_TypeDef
-#define JOY_CENTER           JOY_SEL
-#define JOY_State_TypeDef    JOYState_TypeDef 
-
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/ 
 
