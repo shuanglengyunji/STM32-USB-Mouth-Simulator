@@ -43,7 +43,8 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 __IO uint8_t PrevXferComplete = 1;
-RCC_ClocksTypeDef RCC_ClockFreq;
+u32 Systick_5ms = 0;	//KEY
+u32 Systick_100ms = 0;	//LED
 /* Extern variables ----------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -168,13 +169,29 @@ int main(void)
 	
 	while (1)
 	{
+		//KEY
+		if(Systick_5ms >= 5)
+		{
+			Systick_5ms = 0;
+			
+			
+		}
+		
+		//LED
+		if(Systick_100ms >= 100)
+		{
+			Systick_100ms = 0;
+			
+			
+		}
+		
+		//USB任务，一直跑，要需要发送的马上发
 		if(bDeviceState == CONFIGURED)
 		{
-			delay_ms(1000);
+//			delay_ms(1000);
 			
-//			Right_Key();
-			
-			Left_Key();
+//			Right_Key();		
+//			Left_Key();
 		}
 	}
 }
