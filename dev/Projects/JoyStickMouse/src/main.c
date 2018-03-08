@@ -182,6 +182,14 @@ int main(void)
 		{
 			Systick_100ms = 0;
 			
+			static u8 counter_led = 0;
+			
+			counter_led++;
+			if(counter_led >= 5)
+			{
+				counter_led = 0;
+				STM_EVAL_LEDToggle(LED1);
+			}
 			
 		}
 		

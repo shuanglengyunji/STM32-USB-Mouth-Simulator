@@ -35,9 +35,9 @@ typedef enum
 //LED
 
 #define LED1							 1
-#define LED1_PIN                         GPIO_Pin_12
-#define LED1_GPIO_PORT                   GPIOB
-#define LED1_GPIO_CLK                    RCC_APB2Periph_GPIOB
+#define LED1_PIN                         GPIO_Pin_13
+#define LED1_GPIO_PORT                   GPIOC
+#define LED1_GPIO_CLK                    RCC_APB2Periph_GPIOC
 
 #define LED2							 2
 #define LED2_PIN                         GPIO_Pin_13

@@ -47,81 +47,80 @@
 /* Private functions ---------------------------------------------------------*/
 
 /* USB Standard Device Descriptor */
-const uint8_t Joystick_DeviceDescriptor[JOYSTICK_SIZ_DEVICE_DESC] =
+const uint8_t Joystick_DeviceDescriptor[JOYSTICK_SIZ_DEVICE_DESC] =				//设备描述符
   {
-    0x12,                       /*bLength */
-    USB_DEVICE_DESCRIPTOR_TYPE, /*bDescriptorType*/
-    0x00,                       /*bcdUSB */
-    0x02,
-    0x00,                       /*bDeviceClass*/
-    0x00,                       /*bDeviceSubClass*/
-    0x00,                       /*bDeviceProtocol*/
-    0x40,                       /*bMaxPacketSize 64*/
-    0x83,                       /*idVendor (0x0483)*/
+    0x12,                       /*bLength */									//长度
+    USB_DEVICE_DESCRIPTOR_TYPE, /*bDescriptorType*/								//描述符类型  0x01代表设备描述符
+    0x00,                       /*bcdUSB */										//USB协议版本（2个字节）
+    0x02,																		//采用BCD码，USB2.0就是0x0200，USB的描述符传输是小端结构，所以低字节在先
+    0x00,                       /*bDeviceClass*/								//类代码
+    0x00,                       /*bDeviceSubClass*/								//子类代码
+    0x00,                       /*bDeviceProtocol*/								//设备所用协议
+    0x40,                       /*bMaxPacketSize 64*/							//端点0最大包长，可以使用8、16、32、64
+    0x83,                       /*idVendor (0x0483)*/							//VID 厂商ID
     0x04,
-    0x10,                       /*idProduct = 0x5710*/
+    0x10,                       /*idProduct = 0x5710*/							//PID 产品ID
     0x57,
-    0x00,                       /*bcdDevice rel. 2.00*/
+    0x00,                       /*bcdDevice rel. 2.00*/							//设备版本号
     0x02,
-    1,                          /*Index of string descriptor describing
+    1,                          /*Index of string descriptor describing			//厂商描述字符串索引
                                                   manufacturer */
-    2,                          /*Index of string descriptor describing
+    2,                          /*Index of string descriptor describing			//产品描述字符串索引
                                                  product*/
-    3,                          /*Index of string descriptor describing the
+    3,                          /*Index of string descriptor describing the		//设备描述字符串索引
                                                  device serial number */
-    0x01                        /*bNumConfigurations*/
+    0x01                        /*bNumConfigurations*/							//设备配置的个数
   }
   ; /* Joystick_DeviceDescriptor */
 
 
 /* USB Configuration Descriptor */
 /*   All Descriptors (Configuration, Interface, Endpoint, Class, Vendor */
-const uint8_t Joystick_ConfigDescriptor[JOYSTICK_SIZ_CONFIG_DESC] =
+const uint8_t Joystick_ConfigDescriptor[JOYSTICK_SIZ_CONFIG_DESC] =				//配置描述符	
   {
-    0x09, /* bLength: Configuration Descriptor size */
-    USB_CONFIGURATION_DESCRIPTOR_TYPE, /* bDescriptorType: Configuration */
-    JOYSTICK_SIZ_CONFIG_DESC,
-    /* wTotalLength: Bytes returned */
-    0x00,
-    0x01,         /*bNumInterfaces: 1 interface*/
-    0x01,         /*bConfigurationValue: Configuration value*/
-    0x00,         /*iConfiguration: Index of string descriptor describing
+    0x09, /* bLength: Configuration Descriptor size */							//长度
+    USB_CONFIGURATION_DESCRIPTOR_TYPE, /* bDescriptorType: Configuration */		//描述符类型,配置描述符的描述符类型为0x02
+    JOYSTICK_SIZ_CONFIG_DESC,		/* wTotalLength: Bytes returned */			//整个配置描述符总长度（2字节），包括配置描述符、接口描述符、（类特殊描述符）、端点描述符
+    0x00,																		
+    0x01,         /*bNumInterfaces: 1 interface*/								//接口数量
+    0x01,         /*bConfigurationValue: Configuration value*/					//配置的值
+    0x00,         /*iConfiguration: Index of string descriptor describing		//字符串索引
                                      the configuration*/
-    0xE0,         /*bmAttributes: Self powered */
-    0x32,         /*MaxPower 100 mA: this current is used for detecting Vbus*/
+	0x80,         /*bmAttributes: VBus powered */								//设备特性：E0：自供电、支持远程唤醒  C0：自供电，不支持远程唤醒  80：总线供电，不支持远程唤醒
+    0xC8,         /*MaxPower 400 mA */											//从总线获得的最大电流，单位2ma，因为是总线供电，所以需要C8（200）*2mA = 400mA
 
-    /************** Descriptor of Joystick Mouse interface ****************/
+    /************** Descriptor of Joystick Mouse interface ****************/	//接口描述符
     /* 09 */
-    0x09,         /*bLength: Interface Descriptor size*/
-    USB_INTERFACE_DESCRIPTOR_TYPE,/*bDescriptorType: Interface descriptor type*/
-    0x00,         /*bInterfaceNumber: Number of Interface*/
-    0x00,         /*bAlternateSetting: Alternate setting*/
-    0x01,         /*bNumEndpoints*/
-    0x03,         /*bInterfaceClass: HID*/
-    0x01,         /*bInterfaceSubClass : 1=BOOT, 0=no boot*/
-    0x02,         /*nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse*/
-    0,            /*iInterface: Index of string descriptor*/
+    0x09,         /*bLength: Interface Descriptor size*/							//长度
+    USB_INTERFACE_DESCRIPTOR_TYPE,/*bDescriptorType: Interface descriptor type*/	//描述符类型
+    0x00,         /*bInterfaceNumber: Number of Interface*/							//接口编号
+    0x00,         /*bAlternateSetting: Alternate setting*/							//备用编号
+    0x01,         /*bNumEndpoints*/													//端点数
+    0x03,         /*bInterfaceClass: HID*/											//类
+    0x01,         /*bInterfaceSubClass : 1=BOOT, 0=no boot*/						//子类
+    0x02,         /*nInterfaceProtocol : 0=none, 1=keyboard, 2=mouse*/				//协议          1 -- 鼠标
+    0,            /*iInterface: Index of string descriptor*/						//字符串索引
     /******************** Descriptor of Joystick Mouse HID ********************/
-    /* 18 */
-    0x09,         /*bLength: HID Descriptor size*/
-    HID_DESCRIPTOR_TYPE, /*bDescriptorType: HID*/
-    0x00,         /*bcdHID: HID Class Spec release number*/
-    0x01,
-    0x00,         /*bCountryCode: Hardware target country*/
-    0x01,         /*bNumDescriptors: Number of HID class descriptors to follow*/
-    0x22,         /*bDescriptorType*/
-    JOYSTICK_SIZ_REPORT_DESC,/*wItemLength: Total length of Report descriptor*/
+    /* 18 */																	//端点描述符
+    0x09,         /*bLength: HID Descriptor size*/									//长度
+    HID_DESCRIPTOR_TYPE, /*bDescriptorType: HID*/									//描述符类型
+    0x00,         /*bcdHID: HID Class Spec release number*/							//HID协议版本号
+    0x01,																			
+    0x00,         /*bCountryCode: Hardware target country*/							//国家号
+    0x01,         /*bNumDescriptors: Number of HID class descriptors to follow*/	//下级描述符数量
+    0x22,         /*bDescriptorType*/												//下级描述符类型 0x22 -- 报告描述符
+    JOYSTICK_SIZ_REPORT_DESC,/*wItemLength: Total length of Report descriptor*/		//下级描述符总长度（2字节）
     0x00,
-    /******************** Descriptor of Joystick Mouse endpoint ********************/
+    /******************** Descriptor of Joystick Mouse endpoint ********************/	//端点描述符
     /* 27 */
-    0x07,          /*bLength: Endpoint Descriptor size*/
-    USB_ENDPOINT_DESCRIPTOR_TYPE, /*bDescriptorType:*/
+    0x07,          /*bLength: Endpoint Descriptor size*/							//长度
+    USB_ENDPOINT_DESCRIPTOR_TYPE, /*bDescriptorType:*/								//描述符类型
 
-    0x81,          /*bEndpointAddress: Endpoint Address (IN)*/
-    0x03,          /*bmAttributes: Interrupt endpoint*/
-    0x04,          /*wMaxPacketSize: 4 Byte max */
+    0x81,          /*bEndpointAddress: Endpoint Address (IN)*/						//端点地址（对host来说是输入，所以D7用1表示IN）
+    0x03,          /*bmAttributes: Interrupt endpoint*/								//传输类型    3 -- 中断传输
+    0x04,          /*wMaxPacketSize: 4 Byte max */									//包长度
     0x00,
-    0x20,          /*bInterval: Polling Interval (32 ms)*/
+    0x20,          /*bInterval: Polling Interval (32 ms)*/							//查询时间
     /* 34 */
   }
   ; /* MOUSE_ConfigDescriptor */

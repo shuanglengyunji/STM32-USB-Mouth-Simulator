@@ -26,9 +26,7 @@ int main(void)
 		if(EP2BUSY==0)
 		{
 			EP2BUSY = 1;
-//				
 			Joystick_Send(1,1);
-			
 		}
 	}
 }

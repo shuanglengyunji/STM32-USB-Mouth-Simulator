@@ -26,7 +26,7 @@
 /* Private functions ---------------------------------------------------------*/
 
 /* USB Standard Device Descriptor */
-const u8 Joystick_DeviceDescriptor[JOYSTICK_SIZ_DEVICE_DESC] =
+const u8 Joystick_DeviceDescriptor[JOYSTICK_SIZ_DEVICE_DESC] =	//Éè±¸ÃèÊö·û
   {
     0x12,                       /*bLength */
     USB_DEVICE_DESCRIPTOR_TYPE, /*bDescriptorType*/
@@ -63,7 +63,7 @@ const u8 Joystick_ConfigDescriptor[JOYSTICK_SIZ_CONFIG_DESC] =
  /* wTotalLength: Bytes returned */
  0x00,
  
- 0x02,	//bNumInterfaces×Ö¶Î
+ 0x02,	//bNumInterfaces×Ö¶Î				2¸ö½Ó¿Ú
  0x01,	//bConfiguration×Ö¶Î
  0x00,	//iConfigurationz×Ö¶Î
  0x80,	//bmAttributes×Ö¶Î
@@ -74,7 +74,7 @@ const u8 Joystick_ConfigDescriptor[JOYSTICK_SIZ_CONFIG_DESC] =
  0x04,	//bDescriptorType×Ö¶Î
  0x00,	//bInterfaceNumber×Ö¶Î
  0x00,	//bAlternateSetting×Ö¶Î
- 0x02,	//bNumEndpoints×Ö¶Î
+ 0x02,	//bNumEndpoints×Ö¶Î					
  0x03,	//bInterfaceClass×Ö¶Î
  0x01,	//bInterfaceSubClass×Ö¶Î
  0x01,	//bInterfaceProtocol×Ö¶Î
