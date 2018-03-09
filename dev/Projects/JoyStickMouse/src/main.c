@@ -1,40 +1,10 @@
 /**
   ******************************************************************************
   * @file    main.c
-  * @author  MCD Application Team
-  * @version V4.1.0
-  * @date    26-May-2017
-  * @brief   Joystick Mouse demo main file
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
-  *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
+  * @author  Liu Han
+  * @brief   Joystick Mouse
   ******************************************************************************
   */
-
 
 /* Includes ------------------------------------------------------------------*/
 #include "hw_config.h"
@@ -45,6 +15,10 @@
 __IO uint8_t PrevXferComplete = 1;
 u32 Systick_5ms = 0;	//KEY
 u32 Systick_100ms = 0;	//LED
+u8 Usb_Left_Key_Flag = 0;		//USB需要发送左键
+u8 Usb_Right_Key_Flag = 0;		//USB需要发送右键
+u8 Usart_Left_Key_Flag = 0;		//Usart需要发送左键
+u8 Usart_Right_Key_Flag = 0;	//Usart需要发送右键
 /* Extern variables ----------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -66,31 +40,51 @@ static void delay_ms(u16 time)
 }
 
 /**
-  * @brief  Right key.
+  * @brief  Usart Send Left key CMD.
   * @param  None
   * @retval None
   */
-static void Right_Key(void)
+static void Usart_Left_Key(void)
 {
-	while(!PrevXferComplete){}
-		Rightkey_Send(ENABLE);
-
-	while(!PrevXferComplete){}
-		Rightkey_Send(DISABLE);
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);	/* 等待发送完毕 */
+	USART_SendData(USART1, 0x01);									/* 发送左键指令 */
 }
 
 /**
-  * @brief  Left key.
+  * @brief  Usart Send Right key CMD.
   * @param  None
   * @retval None
   */
-static void Left_Key(void)
+static void Usart_Right_Key(void)
+{
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);	/* 等待发送完毕 */
+	USART_SendData(USART1, 0x02);									/* 发送右键指令 */
+}
+
+/**
+  * @brief  Usb Send Left key CMD.
+  * @param  None
+  * @retval None
+  */
+static void Usb_Left_Key(void)
 {
 	while(!PrevXferComplete){}
-		Leftkey_Send(ENABLE);
-
+	Leftkey_Send(ENABLE);
 	while(!PrevXferComplete){}
-		Leftkey_Send(DISABLE);
+	Leftkey_Send(DISABLE);
+}
+
+/**
+  * @brief  Usb Send Right key CMD.
+  * @param  None
+  * @retval None
+  */
+static void Usb_Right_Key(void)
+{
+	while(!PrevXferComplete){}
+	Rightkey_Send(ENABLE);
+	while(!PrevXferComplete){}
+	Rightkey_Send(DISABLE);	
 }
 
 /**
@@ -98,7 +92,7 @@ static void Left_Key(void)
   * @param  u8 Direction.
   * @retval None
   */
-static void Move(u8 Direction)
+static void Usb_Move(u8 Direction)
 {
 	while(!PrevXferComplete){}
 	switch(Direction)
@@ -174,6 +168,32 @@ int main(void)
 		{
 			Systick_5ms = 0;
 			
+			//按键检测 + 延时防抖
+			
+			u32 key = 0;					//本次按键状态
+			static u32 key_last = 0;		//上一次的按键状态
+			
+			key = STM_EVAL_PBGetState();	//取当前按键状态
+			if(key)
+			{
+				key_last++;
+				if(key_last >= 4)		//防抖时间间隔  4*5ms = 20ms
+				{
+					//满足要求，点击一次
+					
+					//左键
+					Usb_Left_Key_Flag = 1;	
+					Usart_Left_Key_Flag = 1;
+					
+					//右键
+//					Usb_Right_Key_Flag = 1;
+//					Usart_Right_Key_Flag = 1;
+				}
+			}
+			else
+			{
+				key_last = 0;		//对上一次按键状态清零
+			}
 			
 		}
 		
@@ -193,15 +213,69 @@ int main(void)
 			
 		}
 		
-		//USB任务，一直跑，要需要发送的马上发
+		//USB发送任务，一直跑，要需要发送的马上发
 		if(bDeviceState == CONFIGURED)
 		{
-//			delay_ms(1000);
+			if(Usb_Left_Key_Flag)
+			{
+				Usb_Left_Key_Flag = 0;
+				
+				Usb_Left_Key();
+			}
 			
-//			Right_Key();		
-//			Left_Key();
+			if(Usb_Right_Key_Flag)
+			{
+				Usb_Right_Key_Flag = 0;
+				
+				Usb_Right_Key();
+			}
+		}
+		
+		//Usart发送任务，一直跑，随时发送
+		if(Usart_Left_Key_Flag)
+		{
+			Usart_Left_Key_Flag = 0;
+			
+			Usart_Left_Key();
+		}
+		if(Usart_Right_Key_Flag)
+		{
+			Usart_Right_Key_Flag = 0;
+			
+			Usart_Right_Key();
 		}
 	}
+}
+
+/**
+  * Function Name  : USART1_IRQHandler
+  * Description    : This function handles Usart1 interrupt request.
+  * Input          : None
+  * Output         : None
+  * Return         : None
+  */
+void USART1_IRQHandler(void)
+{
+	uint8_t ch;
+	
+	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
+	{ 	
+	    //ch = USART1->DR;
+		ch = USART_ReceiveData(USART1);
+		
+//		//把接收到的东西发回去
+//		while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);	/* 等待发送完毕 */
+//		USART_SendData(USART1, (uint8_t) ch);							/* 发送一个字节数据到USART1 */
+		
+		if(ch == 0x01)
+		{
+			Usb_Left_Key_Flag = 1;
+		}
+		else if(ch == 0x02)
+		{
+			Usb_Right_Key_Flag = 1;
+		}
+	} 
 }
 
 /**

@@ -33,6 +33,7 @@ typedef enum
 #endif
 
 //LED
+//现在的最小系统板上只有1个LED，所以两个LED编号配的其实是一个LED
 
 #define LED1							 1
 #define LED1_PIN                         GPIO_Pin_13
