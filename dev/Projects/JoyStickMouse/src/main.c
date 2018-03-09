@@ -15,6 +15,7 @@
 __IO uint8_t PrevXferComplete = 1;
 u32 Systick_5ms = 0;	//KEY
 u32 Systick_100ms = 0;	//LED
+u8 Led_flicker_Mode = 0;	//LED的闪烁模式
 u8 Usb_Left_Key_Flag = 0;		//USB需要发送左键
 u8 Usb_Right_Key_Flag = 0;		//USB需要发送右键
 u8 Usart_Left_Key_Flag = 0;		//Usart需要发送左键
@@ -204,13 +205,30 @@ int main(void)
 			
 			static u8 counter_led = 0;
 			
-			counter_led++;
-			if(counter_led >= 5)
+			switch(Led_flicker_Mode)
 			{
-				counter_led = 0;
-				STM_EVAL_LEDToggle(LED1);
+				case 0:
+					STM_EVAL_LEDOff(LED1);	//关闭LED
+				break;
+				
+				case 1:
+					counter_led++;
+					if( counter_led % 2 == 0 )	//200ms变换一下
+					{
+						counter_led = 0;
+						STM_EVAL_LEDToggle(LED1);
+					}
+					if(counter_led >= 10)		//只持续闪1s
+					{
+						counter_led = 0;
+						Led_flicker_Mode = 0;	//闪完之后就回到不闪的模式去
+					}
+				break;
+				
+				default:
+					STM_EVAL_LEDOn(LED1);	//出现了不应该出现的情况，LED常亮
+				break;
 			}
-			
 		}
 		
 		//USB发送任务，一直跑，要需要发送的马上发
