@@ -137,13 +137,23 @@ void STM_EVAL_PBInit(void)
   GPIO_InitTypeDef GPIO_InitStructure;
 
   /* Enable the BUTTON Clock */
-  RCC_APB2PeriphClockCmd(PUSH_BUTTON_GPIO_CLK | RCC_APB2Periph_AFIO, ENABLE);
+  RCC_APB2PeriphClockCmd(PUSH_BUTTON1_GPIO_CLK | PUSH_BUTTON2_GPIO_CLK | PUSH_BUTTON3_GPIO_CLK | RCC_APB2Periph_AFIO, ENABLE);
 
   /* Configure Button pin as input floating */
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;	//浮空输入
-  GPIO_InitStructure.GPIO_Pin = PUSH_BUTTON_PIN;
+  GPIO_InitStructure.GPIO_Pin = PUSH_BUTTON1_PIN;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-  GPIO_Init(PUSH_BUTTON_GPIO_PORT, &GPIO_InitStructure);
+  GPIO_Init(PUSH_BUTTON1_GPIO_PORT, &GPIO_InitStructure);
+	
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;	//浮空输入
+  GPIO_InitStructure.GPIO_Pin = PUSH_BUTTON2_PIN;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(PUSH_BUTTON2_GPIO_PORT, &GPIO_InitStructure);
+	
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;	//浮空输入
+  GPIO_InitStructure.GPIO_Pin = PUSH_BUTTON3_PIN;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(PUSH_BUTTON3_GPIO_PORT, &GPIO_InitStructure);
 }
 
 /**
@@ -151,9 +161,16 @@ void STM_EVAL_PBInit(void)
   * @param  None. 
   * @retval The Button GPIO pin value.
   */
-uint32_t STM_EVAL_PBGetState(void)
+uint32_t STM_EVAL_PBGetState(u8 pushbutton)
 {
-  return GPIO_ReadInputDataBit(PUSH_BUTTON_GPIO_PORT, PUSH_BUTTON_PIN);
+	if(pushbutton == PUSH_BUTTON1)
+		return GPIO_ReadInputDataBit(PUSH_BUTTON1_GPIO_PORT, PUSH_BUTTON1_PIN);
+	else if(pushbutton == PUSH_BUTTON2)
+		return GPIO_ReadInputDataBit(PUSH_BUTTON2_GPIO_PORT, PUSH_BUTTON2_PIN);
+	else if(pushbutton == PUSH_BUTTON3)
+		return GPIO_ReadInputDataBit(PUSH_BUTTON3_GPIO_PORT, PUSH_BUTTON3_PIN);
+	else
+		return 0;
 }
 
 /**
@@ -179,17 +196,6 @@ void STM_EVAL_COM1_Init(void)
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(GPIOA, &GPIO_InitStructure);
-	
-//	/* Configure USART1 Tx (PB.06) as alternate function push-pull */
-//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
-//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
-//	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-//	GPIO_Init(GPIOB, &GPIO_InitStructure);
-//	/* Configure USART1 Rx (PB.7) as input floating */
-//	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_7;
-//	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
-//	GPIO_Init(GPIOB, &GPIO_InitStructure);
-//	GPIO_PinRemapConfig(GPIO_Remap_USART1, ENABLE);		//要用PB6和PB7时开启
 	
 	/* USART1 mode config */
 	USART_InitStructure.USART_BaudRate = 115200;

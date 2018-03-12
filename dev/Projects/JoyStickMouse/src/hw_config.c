@@ -42,15 +42,14 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+__IO uint8_t PrevXferComplete = 1;
 ErrorStatus HSEStartUpStatus;
 EXTI_InitTypeDef EXTI_InitStructure;
 
 /* Extern variables ----------------------------------------------------------*/
-extern __IO uint8_t PrevXferComplete;
-
 /* Private function prototypes -----------------------------------------------*/
 static void IntToUnicode (uint32_t value , uint8_t *pbuf , uint8_t len);
-static void Delay(__IO uint32_t nTime);
+
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -236,219 +235,68 @@ void USB_Cable_Config (FunctionalState NewState)
 }
 
 /**
-  * Function Name : JoyState.
-  * Description   : Decodes the Joystick direction.
-  * Input         : None.
-  * Output        : None.
-  * Return value  : The direction value.
-  */
-uint8_t JoyState(void)
-{
-//	/* "right" key is pressed */
-//	if (STM_EVAL_PBGetState(Button_RIGHT))
-//	{
-//		return JOY_RIGHT;
-//	}
-//	
-//	/* "left" key is pressed */
-//	if (STM_EVAL_PBGetState(Button_LEFT))
-//	{
-//	return JOY_LEFT;
-//	}
-//	
-//	/* "up" key is pressed */
-//	if (STM_EVAL_PBGetState(Button_UP))
-//	{
-//		return JOY_UP;
-//	}
-//	
-//	/* "down" key is pressed */
-//	if (STM_EVAL_PBGetState(Button_DOWN))
-//	{
-//		return JOY_DOWN;
-//	}
-//	
-//	/* No key is pressed */
-//	else
-//	{
-//		return 0;
-//	} 
-
-	return 0;
-}
-
-/**
-  * Function Name : Joystick_Send.
-  * Description   : prepares buffer to be sent containing Joystick event infos.
-  * Input         : Keys: keys received from terminal.
+  * Function Name : Usb_Mouse_Send.
+  * Description   : prepares buffer to be sent containing mouse event infos.
+  * Input         : left	left key
+					right	right key
+					middle	middle key
+					x		x move
+					y		y move
+					z		z move
   * Output        : None.
   * Return value  : None.
   */
-void Joystick_Send(uint8_t Keys)
+void Usb_Mouse_Send(u8 byte1, u8 byte2, u8 byte3, u8 byte4)
 {
-  uint8_t Mouse_Buffer[4] = {0, 0, 0, 0};
-  int8_t X = 0, Y = 0;
-  
-  switch (Keys)
-  {
-    case JOY_LEFT:
-      X -= CURSOR_STEP;
-      break;
-    case JOY_RIGHT:
-      X += CURSOR_STEP;
-      break;
-    case JOY_UP:
-      Y -= CURSOR_STEP;
-      break;
-    case JOY_DOWN:
-      Y += CURSOR_STEP;
-      break;
-    default:
-      return;
-  }
-  /* prepare buffer to send */
-  Mouse_Buffer[1] = X;
-  Mouse_Buffer[2] = Y;
-  
-  /* Reset the control token to inform upper layer that a transfer is ongoing */
-  PrevXferComplete = 0;
-  
-  /* Copy mouse position info in ENDP1 Tx Packet Memory Area*/
-  USB_SIL_Write(EP1_IN, Mouse_Buffer, 4);
-  
-  /* Enable endpoint for transmission */
-  SetEPTxValid(ENDP1);
+	uint8_t Mouse_Buffer[4] = {0, 0, 0, 0};
+	
+	while(!PrevXferComplete){}	//等待上一帧的内容发完
+	
+	/* prepare buffer to send */
+	Mouse_Buffer[0] = byte1;
+	Mouse_Buffer[1] = byte2;
+	Mouse_Buffer[2] = byte3;
+	Mouse_Buffer[3] = byte4;
 
+	/* Reset the control token to inform upper layer that a transfer is ongoing */
+	PrevXferComplete = 0;
+
+	/* Copy mouse position info in ENDP1 Tx Packet Memory Area*/
+	USB_SIL_Write(EP1_IN, Mouse_Buffer, 4);
+
+	/* Enable endpoint for transmission */
+	SetEPTxValid(ENDP1);
 }
 
 /**
-  * Function Name : Rightkey_Send.
-  * Description   : prepares buffer to be sent containing Rightkey event infos.
-  * Input         : u8 en. Input ENABLE to click and DISABLE to loosen.
+  * Function Name : Usart_Mouse_Send.
+  * Description   : prepares buffer to be sent containing mouse event infos.
+  * Input         : left	left key
+					right	right key
+					middle	middle key
+					x		x move
+					y		y move
+					z		z move
   * Output        : None.
   * Return value  : None.
   */
-void Rightkey_Send(u8 en)
+void Usart_Mouse_Send(u8 byte1, u8 byte2, u8 byte3, u8 byte4)
 {
-  uint8_t Mouse_Buffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+	//帧头是 0xAB 0xCD
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);	/* 等待发送完毕 */
+	USART_SendData(USART1, 0xAB);
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);	/* 等待发送完毕 */
+	USART_SendData(USART1, 0xCD);
 	
-  /* prepare buffer to send */
-	if(en == ENABLE)
-		Mouse_Buffer[0] = 2;	//右键
-	else
-		Mouse_Buffer[0] = 0;
-  
-  /* Reset the control token to inform upper layer that a transfer is ongoing */
-  PrevXferComplete = 0;
-  
-  /* Copy mouse position info in ENDP1 Tx Packet Memory Area*/
-  USB_SIL_Write(EP1_IN, Mouse_Buffer, 4);
-	
-  /* Enable endpoint for transmission */
-  SetEPTxValid(ENDP1);
-}
-
-/**
-  * Function Name : Leftkey_Send.
-  * Description   : prepares buffer to be sent containing Leftkey event infos.
-  * Input         : u8 en. Input ENABLE to click and DISABLE to loosen.
-  * Output        : None.
-  * Return value  : None.
-  */
-void Leftkey_Send(u8 en)
-{
-  uint8_t Mouse_Buffer[8] = {0, 0, 0, 0, 0, 0, 0, 0};
-	
-  /* prepare buffer to send */
-	if(en == ENABLE)
-		Mouse_Buffer[0] = 1;	//左键
-	else
-		Mouse_Buffer[0] = 0;
-  
-  /* Reset the control token to inform upper layer that a transfer is ongoing */
-  PrevXferComplete = 0;
-  
-  /* Copy mouse position info in ENDP1 Tx Packet Memory Area*/
-  USB_SIL_Write(EP1_IN, Mouse_Buffer, 4);
-	
-  /* Enable endpoint for transmission */
-  SetEPTxValid(ENDP1);
-}
-
-/**
-  * Function Name  : Joy_Emul.
-  * Description    : Gets Pointer Data
-					Emul = Emulate, means a simulator. This function draw a square with the mouse it controled. 
-  * Input          : None.
-  * Output         : None.
-  * Return         : None.
-  */
-void Joy_Emul(void)
-{
-  uint8_t Mouse_Buffer[4] = {0, 0, 0, 0};
-  uint8_t X = 0, Y = 0; 
-  static uint8_t Sens = 0;
-  static uint8_t Step = 0;
-  
-  Delay(0x0FFFF);	//这个函数默认自己会被不间断循环调用，所以需要延时一段时间防止鼠标运动过快
-  
-  if (Step == 35)
-  {
-    Step = 0;
-    Sens++;
-  }
-  
-  if(Sens == 0)
-  {
-    X = Step++;
-    Y = 0;
-  }
-  
-  if(Sens == 1)
-  {
-    Y = Step++;
-    X = 0;
-  }      
-  if (Sens==2)
-  {
-    X = 256 - Step++;
-    Y = 0;
-  } 
-  
-  if (Sens == 3)
-  {
-    Y = 256 - Step++;
-    X = 0;
-  }
-  
-  if (Sens == 4)
-  { 
-    Sens = 0;
-    X = 0;
-    Y = 0;
-  }
-  
-  Mouse_Buffer[0] = 0;
-  Mouse_Buffer[1] = X;
-  Mouse_Buffer[2] = Y;
-  Mouse_Buffer[3] = 0;
-  
-  /* Reset the control token to inform upper layer that a transfer is ongoing */
-  PrevXferComplete = 0;
-  /* Copy mouse position info in ENDP1 Tx Packet Memory Area*/
-  USB_SIL_Write(EP1_IN, Mouse_Buffer, 4);
-  /* Enable endpoint for transmission */
-  SetEPTxValid(ENDP1);
-}
-
-/**
-  * @brief  Inserts a delay time.
-  * @param  nTime: specifies the delay time length, in milliseconds.
-  * @retval None
-  */
-static void Delay(__IO uint32_t nTime)
-{
-  for(; nTime != 0; nTime--);
+	//发送4个字节
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);	/* 等待发送完毕 */
+	USART_SendData(USART1, byte1);
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);	/* 等待发送完毕 */
+	USART_SendData(USART1, byte2);
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);	/* 等待发送完毕 */
+	USART_SendData(USART1, byte3);
+	while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);	/* 等待发送完毕 */
+	USART_SendData(USART1, byte4);
 }
 
 /**
@@ -504,3 +352,158 @@ static void IntToUnicode (uint32_t value , uint8_t *pbuf , uint8_t len)
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+
+///**
+//  * Function Name : Joystick_Send.
+//  * Description   : prepares buffer to be sent containing Joystick event infos.
+//  * Input         : Keys: keys received from terminal.
+//  * Output        : None.
+//  * Return value  : None.
+//  */
+//void Joystick_Send(uint8_t Keys)
+//{
+//  uint8_t Mouse_Buffer[4] = {0, 0, 0, 0};
+//  int8_t X = 0, Y = 0;
+//  
+//  switch (Keys)
+//  {
+//    case JOY_LEFT:
+//      X -= CURSOR_STEP;
+//      break;
+//    case JOY_RIGHT:
+//      X += CURSOR_STEP;
+//      break;
+//    case JOY_UP:
+//      Y -= CURSOR_STEP;
+//      break;
+//    case JOY_DOWN:
+//      Y += CURSOR_STEP;
+//      break;
+//    default:
+//      return;
+//  }
+//  /* prepare buffer to send */
+//  Mouse_Buffer[1] = X;
+//  Mouse_Buffer[2] = Y;
+//  
+//  /* Reset the control token to inform upper layer that a transfer is ongoing */
+//  PrevXferComplete = 0;
+//  
+//  /* Copy mouse position info in ENDP1 Tx Packet Memory Area*/
+//  USB_SIL_Write(EP1_IN, Mouse_Buffer, 4);
+//  
+//  /* Enable endpoint for transmission */
+//  SetEPTxValid(ENDP1);
+
+//}
+
+
+///**
+//  * Function Name  : Joy_Emul.
+//  * Description    : Gets Pointer Data
+//					Emul = Emulate, means a simulator. This function draw a square with the mouse it controled. 
+//  * Input          : None.
+//  * Output         : None.
+//  * Return         : None.
+//  */
+//void Joy_Emul(void)
+//{
+//  uint8_t Mouse_Buffer[4] = {0, 0, 0, 0};
+//  uint8_t X = 0, Y = 0; 
+//  static uint8_t Sens = 0;
+//  static uint8_t Step = 0;
+//  
+//  Delay(0x0FFFF);	//这个函数默认自己会被不间断循环调用，所以需要延时一段时间防止鼠标运动过快
+//  
+//  if (Step == 35)
+//  {
+//    Step = 0;
+//    Sens++;
+//  }
+//  
+//  if(Sens == 0)
+//  {
+//    X = Step++;
+//    Y = 0;
+//  }
+//  
+//  if(Sens == 1)
+//  {
+//    Y = Step++;
+//    X = 0;
+//  }      
+//  if (Sens==2)
+//  {
+//    X = 256 - Step++;
+//    Y = 0;
+//  } 
+//  
+//  if (Sens == 3)
+//  {
+//    Y = 256 - Step++;
+//    X = 0;
+//  }
+//  
+//  if (Sens == 4)
+//  { 
+//    Sens = 0;
+//    X = 0;
+//    Y = 0;
+//  }
+//  
+//  Mouse_Buffer[0] = 0;
+//  Mouse_Buffer[1] = X;
+//  Mouse_Buffer[2] = Y;
+//  Mouse_Buffer[3] = 0;
+//  
+//  /* Reset the control token to inform upper layer that a transfer is ongoing */
+//  PrevXferComplete = 0;
+//  /* Copy mouse position info in ENDP1 Tx Packet Memory Area*/
+//  USB_SIL_Write(EP1_IN, Mouse_Buffer, 4);
+//  /* Enable endpoint for transmission */
+//  SetEPTxValid(ENDP1);
+//}
+
+
+///**
+//  * Function Name : JoyState.
+//  * Description   : Decodes the Joystick direction.
+//  * Input         : None.
+//  * Output        : None.
+//  * Return value  : The direction value.
+//  */
+//uint8_t JoyState(void)
+//{
+////	/* "right" key is pressed */
+////	if (STM_EVAL_PBGetState(Button_RIGHT))
+////	{
+////		return JOY_RIGHT;
+////	}
+////	
+////	/* "left" key is pressed */
+////	if (STM_EVAL_PBGetState(Button_LEFT))
+////	{
+////	return JOY_LEFT;
+////	}
+////	
+////	/* "up" key is pressed */
+////	if (STM_EVAL_PBGetState(Button_UP))
+////	{
+////		return JOY_UP;
+////	}
+////	
+////	/* "down" key is pressed */
+////	if (STM_EVAL_PBGetState(Button_DOWN))
+////	{
+////		return JOY_DOWN;
+////	}
+////	
+////	/* No key is pressed */
+////	else
+////	{
+////		return 0;
+////	} 
+
+//	return 0;
+//}
+

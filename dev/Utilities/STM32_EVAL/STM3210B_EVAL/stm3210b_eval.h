@@ -33,23 +33,33 @@ typedef enum
 #endif
 
 //LED
-//现在的最小系统板上只有1个LED，所以两个LED编号配的其实是一个LED
 
-#define LED1							 1
-#define LED1_PIN                         GPIO_Pin_13
-#define LED1_GPIO_PORT                   GPIOC
-#define LED1_GPIO_CLK                    RCC_APB2Periph_GPIOC
+#define LED1							1
+#define LED1_PIN                        GPIO_Pin_13
+#define LED1_GPIO_PORT                  GPIOC
+#define LED1_GPIO_CLK                   RCC_APB2Periph_GPIOC
 
-#define LED2							 2
-#define LED2_PIN                         GPIO_Pin_13
-#define LED2_GPIO_PORT                   GPIOC
-#define LED2_GPIO_CLK                    RCC_APB2Periph_GPIOC
+#define LED2							2
+#define LED2_PIN                        GPIO_Pin_13
+#define LED2_GPIO_PORT                  GPIOC
+#define LED2_GPIO_CLK                   RCC_APB2Periph_GPIOC
 
 //PUSH BUTTON
 
-#define PUSH_BUTTON_PIN                  GPIO_Pin_0
-#define PUSH_BUTTON_GPIO_PORT            GPIOA
-#define PUSH_BUTTON_GPIO_CLK             RCC_APB2Periph_GPIOA
+#define PUSH_BUTTON1					1
+#define PUSH_BUTTON1_PIN                GPIO_Pin_0
+#define PUSH_BUTTON1_GPIO_PORT          GPIOA
+#define PUSH_BUTTON1_GPIO_CLK           RCC_APB2Periph_GPIOA
+
+#define PUSH_BUTTON2					2
+#define PUSH_BUTTON2_PIN                GPIO_Pin_0
+#define PUSH_BUTTON2_GPIO_PORT          GPIOA
+#define PUSH_BUTTON2_GPIO_CLK           RCC_APB2Periph_GPIOA
+
+#define PUSH_BUTTON3					3
+#define PUSH_BUTTON3_PIN                GPIO_Pin_0
+#define PUSH_BUTTON3_GPIO_PORT          GPIOA
+#define PUSH_BUTTON3_GPIO_CLK           RCC_APB2Periph_GPIOA
 
 void STM_EVAL_LEDInit(void);
 void STM_EVAL_LEDOn(u8 led);
@@ -57,7 +67,7 @@ void STM_EVAL_LEDOff(u8 led);
 void STM_EVAL_LEDToggle(u8 led);
 
 void STM_EVAL_PBInit(void);
-uint32_t STM_EVAL_PBGetState(void);
+uint32_t STM_EVAL_PBGetState(u8 pushbutton);
 
 void STM_EVAL_COM1_Init(void);
     
