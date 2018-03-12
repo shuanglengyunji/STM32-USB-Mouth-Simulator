@@ -68,11 +68,11 @@ void STM_EVAL_LEDOn(u8 led)
 	switch(led)
 	{
 		case LED1:
-			LED1_GPIO_PORT->BSRR = LED1_PIN;
+			LED1_GPIO_PORT->BRR = LED1_PIN;
 		break;
 		
 		case LED2:
-			LED2_GPIO_PORT->BSRR = LED2_PIN;
+			LED2_GPIO_PORT->BRR = LED2_PIN;
 		break;
 		
 		default:
@@ -91,11 +91,11 @@ void STM_EVAL_LEDOff(u8 led)
 	switch(led)
 	{
 		case LED1:
-			LED1_GPIO_PORT->BRR = LED1_PIN;
+			LED1_GPIO_PORT->BSRR = LED1_PIN;
 		break;
 		
 		case LED2:
-			LED2_GPIO_PORT->BRR = LED2_PIN;
+			LED2_GPIO_PORT->BSRR = LED2_PIN;
 		break;
 		
 		default:

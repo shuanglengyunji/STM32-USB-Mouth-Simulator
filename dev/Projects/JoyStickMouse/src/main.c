@@ -213,9 +213,8 @@ int main(void)
 				
 				case 1:
 					counter_led++;
-					if( counter_led % 2 == 0 )	//200ms变换一下
+					if( counter_led % 1 == 0 )	//200ms变换一下
 					{
-						counter_led = 0;
 						STM_EVAL_LEDToggle(LED1);
 					}
 					if(counter_led >= 10)		//只持续闪1s
@@ -237,14 +236,14 @@ int main(void)
 			if(Usb_Left_Key_Flag)
 			{
 				Usb_Left_Key_Flag = 0;
-				
+				Led_flicker_Mode = 1;
 				Usb_Left_Key();
 			}
 			
 			if(Usb_Right_Key_Flag)
 			{
 				Usb_Right_Key_Flag = 0;
-				
+				Led_flicker_Mode = 1;
 				Usb_Right_Key();
 			}
 		}
