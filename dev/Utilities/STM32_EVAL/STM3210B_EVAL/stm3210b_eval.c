@@ -33,11 +33,11 @@
 #include "stm3210b_eval.h"
 
 /**
-  * @brief  Configures LED GPIO.
+  * @brief  Configures LED1 GPIO.
   * @param  None
   * @retval None
   */
-void STM_EVAL_LEDInit(void)
+void STM_EVAL_LED1_Init(void)
 {
   GPIO_InitTypeDef  GPIO_InitStructure;
   
@@ -48,6 +48,16 @@ void STM_EVAL_LEDInit(void)
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_Init(LED1_GPIO_PORT, &GPIO_InitStructure);
+}
+
+/**
+  * @brief  Configures LED234 GPIO.
+  * @param  None
+  * @retval None
+  */
+void STM_EVAL_LED234_Init(void)
+{
+  GPIO_InitTypeDef  GPIO_InitStructure;
 	
   /* Enable the GPIO_LED Clock */
   RCC_APB2PeriphClockCmd(LED2_GPIO_CLK, ENABLE);
@@ -56,6 +66,22 @@ void STM_EVAL_LEDInit(void)
   GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
   GPIO_Init(LED2_GPIO_PORT, &GPIO_InitStructure);
+	
+  /* Enable the GPIO_LED Clock */
+  RCC_APB2PeriphClockCmd(LED3_GPIO_CLK, ENABLE);
+  /* Configure the GPIO_LED pin */
+  GPIO_InitStructure.GPIO_Pin = LED3_PIN;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(LED3_GPIO_PORT, &GPIO_InitStructure);
+	
+  /* Enable the GPIO_LED Clock */
+  RCC_APB2PeriphClockCmd(LED4_GPIO_CLK, ENABLE);
+  /* Configure the GPIO_LED pin */
+  GPIO_InitStructure.GPIO_Pin = LED4_PIN;
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+  GPIO_Init(LED4_GPIO_PORT, &GPIO_InitStructure);
 }
 
 /**

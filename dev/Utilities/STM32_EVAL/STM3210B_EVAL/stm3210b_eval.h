@@ -44,6 +44,16 @@ typedef enum
 #define LED2_GPIO_PORT                  GPIOC
 #define LED2_GPIO_CLK                   RCC_APB2Periph_GPIOC
 
+#define LED3							3
+#define LED3_PIN                        GPIO_Pin_13
+#define LED3_GPIO_PORT                  GPIOC
+#define LED3_GPIO_CLK                   RCC_APB2Periph_GPIOC
+
+#define LED4							4
+#define LED4_PIN                        GPIO_Pin_13
+#define LED4_GPIO_PORT                  GPIOC
+#define LED4_GPIO_CLK                   RCC_APB2Periph_GPIOC
+
 //PUSH BUTTON
 
 #define PUSH_BUTTON1					1
@@ -61,7 +71,8 @@ typedef enum
 #define PUSH_BUTTON3_GPIO_PORT          GPIOA
 #define PUSH_BUTTON3_GPIO_CLK           RCC_APB2Periph_GPIOA
 
-void STM_EVAL_LEDInit(void);
+void STM_EVAL_LED1_Init(void);
+void STM_EVAL_LED234_Init(void);
 void STM_EVAL_LEDOn(u8 led);
 void STM_EVAL_LEDOff(u8 led);
 void STM_EVAL_LEDToggle(u8 led);

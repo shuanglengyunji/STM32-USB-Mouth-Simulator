@@ -60,19 +60,20 @@ static void IntToUnicode (uint32_t value , uint8_t *pbuf , uint8_t len);
   */
 void Set_System(void)
 {
-  GPIO_InitTypeDef  GPIO_InitStructure;  
-  /*!< At this stage the microcontroller clock setting is already configured, 
+  GPIO_InitTypeDef  GPIO_InitStructure;
+	
+  /*   
+	   At this stage the microcontroller clock setting is already configured, 
        this is done through SystemInit() function which is called from startup
        file (startup_stm32xxx.s) before to branch to application main.
        To reconfigure the default setting of SystemInit() function, refer to
        system_stm32xxx.c file
-     */ 
+  */ 
   
   /******************************************/
   /*  1.Enable the PWR clock         		*/
   /******************************************/
   RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
-  
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA, ENABLE);
   
   /********************************************/
@@ -92,19 +93,13 @@ void Set_System(void)
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ALLGPIO, ENABLE);
 
   /********************************************/
-  /*  3.Enable the USB PULL UP                 */
+  /*  3.Enable the USB PULL UP                */
   /********************************************/
-  
-  /****************************************************/
-  /*  4.Configure the Joystick buttons in GPIO mode     */
-  /****************************************************/
-  
-  STM_EVAL_PBInit();
 
 #ifdef USB_LOW_PWR_MGMT_SUPPORT
   
   /**********************************************************************/
-  /*  5.Configure the EXTI line 18 connected internally to the USB IP   */
+  /*  4.Configure the EXTI line 18 connected internally to the USB IP   */
   /**********************************************************************/
   
   EXTI_ClearITPendingBit(EXTI_Line18);
@@ -115,24 +110,6 @@ void Set_System(void)
   EXTI_Init(&EXTI_InitStructure);
 
 #endif  /* USB_LOW_PWR_MGMT_SUPPORT */
-
-  /**********************************************************************/
-  /*  6.Init Usart1 in EXIT mode									    */
-  /**********************************************************************/
-  
-  STM_EVAL_COM1_Init();
-  
-  /**********************************************************************/
-  /*  7.LED Port Init												    */
-  /**********************************************************************/
-  
-  STM_EVAL_LEDInit();
-  
-  /**********************************************************************/
-  /*  8.PUSH BUTTON Port Init											*/
-  /**********************************************************************/
-  
-  STM_EVAL_PBInit();
   
 } 
  

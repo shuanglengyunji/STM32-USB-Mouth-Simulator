@@ -12,11 +12,12 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
-u32 Systick_5ms = 0;	//KEY
-u32 Systick_100ms = 0;	//LED
+u32 Systick_5ms = 0;		//KEY
+u32 Systick_100ms = 0;		//LED
 u8 Led_flicker_Mode = 0;	//LED的闪烁模式
-u8 com_receive[4] = {0, 0, 0, 0};
-u8 com_receive_flag = 0;
+
+u8 send_buff[4] = {0, 0, 0, 0};
+u8 send_flag = 0;
 
 /* Extern variables ----------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -38,30 +39,26 @@ void delay_ms(u16 time)
 	}
 }
 
-/**
-  * @brief  Mouse_Cmd.
-  * @param  left.right.middle.
-			x.y.z.
-  * @retval None
-  */
-static void Mouse_Cmd(u8 left, u8 right, u8 middle, int8_t x, int8_t y, int8_t z)
-{
-	//byte1
-	uint8_t tmp_byte1 = 0x00;
-	if(left)	tmp_byte1 |= 0x01;
-	if(right)	tmp_byte1 |= 0x02;
-	if(middle)	tmp_byte1 |= 0x04;
-	//byte2
-	uint8_t tmp_byte2 = x;
-	//byte3
-	uint8_t tmp_byte3 = y;
-	//byte4
-	uint8_t tmp_byte4 = z;
-	
-	//发送
-	Usb_Mouse_Send(tmp_byte1,tmp_byte2,tmp_byte3,tmp_byte4);
-	Usart_Mouse_Send(tmp_byte1,tmp_byte2,tmp_byte3,tmp_byte4);
-}
+///**
+//  * @brief  Mouse_Cmd.
+//  * @param  left.right.middle.
+//			x.y.z.
+//  * @retval None
+//  */
+//static void Mouse_To_Byte(u8 left, u8 right, u8 middle, int8_t x, int8_t y, int8_t z)
+//{
+//	//byte1
+//	uint8_t tmp_byte1 = 0x00;
+//	if(left)	tmp_byte1 |= 0x01;
+//	if(right)	tmp_byte1 |= 0x02;
+//	if(middle)	tmp_byte1 |= 0x04;
+//	//byte2
+//	uint8_t tmp_byte2 = x;
+//	//byte3
+//	uint8_t tmp_byte3 = y;
+//	//byte4
+//	uint8_t tmp_byte4 = z;
+//}
 
 /*******************************************************************************
 * Function Name  : main.
@@ -72,39 +69,27 @@ static void Mouse_Cmd(u8 left, u8 right, u8 middle, int8_t x, int8_t y, int8_t z
 *******************************************************************************/
 int main(void)
 {
-	/*
-		1.Enable the PWR clock
-		2.Configure USB DM/DP pins
-		3.Enable the USB PULL UP
-		4.Configure the Joystick buttons in GPIO mode
-		5.Configure the EXTI line 18 connected internally to the USB IP (If defined USB_LOW_PWR_MGMT_SUPPORT)
-		6.Init Usart1 in EXIT mode
-	*/
-	Set_System();
-  
-	/*
-		2 bit for pre-emption priority, 2 bits for subpriority
-		Enable the USB interrupt
-		Enable the USB Wake-up interrupt(Internal interrupr)
-		Enable the Key EXTI line Interrupt
-	*/
-	USB_Interrupts_Config();
+	/*  Init USB Driver. */
+	Set_System();	//Enable the PWR clock
+					//Configure USB DM/DP pins
+					//Enable the USB PULL UP
+					//Configure the EXTI line 18 connected internally to the USB IP (If defined USB_LOW_PWR_MGMT_SUPPORT)
+	USB_Interrupts_Config();	//2 bit for pre-emption priority, 2 bits for subpriority
+								//Enable the USB interrupt
+								//Enable the Key EXTI line Interrupt
+	Set_USBClock();	//Select USB clock source and Init it
+	USB_Init();	//Init USB peripheral
 	
-	/*
-		Select USB clock source and Init it.
-	*/
-	Set_USBClock();
+	/* Init Systick */
+	SysTick_Init();	//Init and enable Systick.
 	
-	/*
-		Init USB peripheral and Begin to communicate with computer.
-		The usb peripheral was enabled at this time.
-	*/
-	USB_Init();
+	/* Init other peripheral */
+	STM_EVAL_COM1_Init();	//Init Usart1 in EXIT mode
+	STM_EVAL_LED1_Init();	//LED1 Port Init
 	
-	/*
-		Init and enable Systick.
-	*/
-	SysTick_Init();
+	STM_EVAL_LED234_Init();	//LED234 Port Init
+	STM_EVAL_PBInit();		//PUSH BUTTON Port Init
+	
 	
 	while (1)
 	{
@@ -211,10 +196,12 @@ int main(void)
 			}
 		}
 		
-		//如果USB正常，才进行：1.PS2捕捉  2.USB发送
-		if(bDeviceState == CONFIGURED)
+		//USB工作正常 且 PS/2接收到数据
+		if(bDeviceState == CONFIGURED && send_flag == 1)
 		{
-			Mouse_Cmd(0,0,0,0,0,0);
+			Usart_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);				//串口发送出去
+			Usb_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);				//USB发送出去
+			send_flag = 0;
 		}
 		
 	}

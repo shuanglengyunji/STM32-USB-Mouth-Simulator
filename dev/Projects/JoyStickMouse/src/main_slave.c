@@ -15,8 +15,8 @@
 u32 Systick_5ms = 0;	//KEY
 u32 Systick_100ms = 0;	//LED
 u8 Led_flicker_Mode = 0;	//LED的闪烁模式
-u8 com_receive[4] = {0, 0, 0, 0};
-u8 com_receive_flag = 0;
+u8 com_buff[4] = {0, 0, 0, 0};
+u8 com_flag = 0;
 
 /* Extern variables ----------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -47,39 +47,23 @@ void delay_ms(u16 time)
 *******************************************************************************/
 int main(void)
 {
-	/*
-		1.Enable the PWR clock
-		2.Configure USB DM/DP pins
-		3.Enable the USB PULL UP
-		4.Configure the Joystick buttons in GPIO mode
-		5.Configure the EXTI line 18 connected internally to the USB IP (If defined USB_LOW_PWR_MGMT_SUPPORT)
-		6.Init Usart1 in EXIT mode
-	*/
-	Set_System();
-  
-	/*
-		2 bit for pre-emption priority, 2 bits for subpriority
-		Enable the USB interrupt
-		Enable the USB Wake-up interrupt(Internal interrupr)
-		Enable the Key EXTI line Interrupt
-	*/
-	USB_Interrupts_Config();
+	/*  Init USB Driver. */
+	Set_System();	//Enable the PWR clock
+					//Configure USB DM/DP pins
+					//Enable the USB PULL UP
+					//Configure the EXTI line 18 connected internally to the USB IP (If defined USB_LOW_PWR_MGMT_SUPPORT)
+	USB_Interrupts_Config();	//2 bit for pre-emption priority, 2 bits for subpriority
+								//Enable the USB interrupt
+								//Enable the Key EXTI line Interrupt
+	Set_USBClock();	//Select USB clock source and Init it
+	USB_Init();	//Init USB peripheral
 	
-	/*
-		Select USB clock source and Init it.
-	*/
-	Set_USBClock();
+	/* Init Systick */
+	SysTick_Init();	//Init and enable Systick.
 	
-	/*
-		Init USB peripheral and Begin to communicate with computer.
-		The usb peripheral was enabled at this time.
-	*/
-	USB_Init();
-	
-	/*
-		Init and enable Systick.
-	*/
-	SysTick_Init();
+	/* Init other peripheral */
+	STM_EVAL_COM1_Init();	//Init Usart1 in EXIT mode
+	STM_EVAL_LED1_Init();	//LED1 Port Init
 	
 	while (1)
 	{
@@ -123,10 +107,10 @@ int main(void)
 		}
 		
 		//USB工作正常 且 串口接收到数据
-		if(bDeviceState == CONFIGURED && com_receive_flag == 1)
+		if(bDeviceState == CONFIGURED && com_flag == 1)
 		{
-			com_receive_flag = 0;
-			Usb_Mouse_Send(com_receive[0],com_receive[1],com_receive[2],com_receive[3]);
+			Usb_Mouse_Send(com_buff[0],com_buff[1],com_buff[2],com_buff[3]);
+			com_flag = 0;
 		}
 	}
 }
@@ -149,9 +133,11 @@ void USART1_IRQHandler(void)
 	    //ch = USART1->DR;
 		ch = USART_ReceiveData(USART1);
 		
-//		//把接收到的东西发回去
-//		while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);	/* 等待发送完毕 */
-//		USART_SendData(USART1, (uint8_t) ch);							/* 发送一个字节数据到USART1 */
+		//如果上一帧没有送入USB口的BUFF，则不接收下一帧
+		if(com_flag)
+		{
+			return;
+		}
 		
 		switch(step)
 		{
@@ -169,23 +155,23 @@ void USART1_IRQHandler(void)
 					step = 0;
 				
 			case 2:
-				com_receive[0] = ch;	//byte1
+				com_buff[0] = ch;	//byte1
 				step = 3;
 			break;
 			
 			case 3:
-				com_receive[1] = ch;	//byte2
+				com_buff[1] = ch;	//byte2
 				step = 4;
 			break;
 						
 			case 4:
-				com_receive[2] = ch;	//byte3
+				com_buff[2] = ch;	//byte3
 				step = 5;
 			break;
 			
 			case 5:
-				com_receive[3] = ch;	//byte4
-				com_receive_flag = 1;	//flag
+				com_buff[3] = ch;	//byte4
+				com_flag = 1;	//flag
 				step = 0;
 			break;
 			
