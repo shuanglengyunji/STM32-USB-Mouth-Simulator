@@ -8,6 +8,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "hw_config.h"
+#include "interface.h"     //底层接口函数
+#include "HOST_SYS.H"      //主机操作函数
+#include <stdio.h>
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -19,33 +22,110 @@ u8 Led_flicker_Mode = 0;	//LED的闪烁模式
 u8 send_buff[4] = {0, 0, 0, 0};
 u8 send_flag = 0;
 
+uint8_t UserBuffer[256];
+
 /* Extern variables ----------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 static void SysTick_Init(void);
 
 /**
-  * @brief  Inserts a delay time.
-  * @param  nTime: specifies the delay time length, in milliseconds.
-  * @retval None
+  * Function Name  : Check_CH375
+  * Description    : The function of ch375
   */
-void delay_ms(u16 time)
-{    
-	u16 i=0;  
-	while(time--)
+void Check_CH375(void)
+{
+	uint8_t res,i,j;
+	uint16_t l;
+	
+	if( CH375CheckConnect() == USBD_CONNECT )          /* 刚检测到一个设备接入，需要枚举 */
 	{
-		i=12000;  //自己定义
-		while(i--) ;    
+		//printf ( "Device Connect\n" );
+		//开始枚举操作		
+		res = CH375BusReset();                   /* 总线复位 */
+		if( res != USB_INT_SUCCESS ) 
+		{
+			printf("Bus Reset Erro\n");
+		}
+		delay_ms( 50 );                          /* 等待设备稳定 */
+
+		/* 获取设备描述符 */			
+		res = CH375GetDeviceDesc( UserBuffer,&l); 
+		if( res == USB_INT_SUCCESS )
+		{				
+			for( i = 0; i < l; i++ )
+			{
+				printf("0x%02x ",(uint16_t)UserBuffer[i]);
+			}
+			printf ("\n");
+		}
+		else 
+		{
+			printf("Get Device Descr Erro:0x%02x\n",(uint16_t)res );
+		}
+		
+		/* 设置地址 */
+		res = CH375SetDeviceAddr( 2 );
+		if( res!= USB_INT_SUCCESS )
+		{
+			printf ("Set Addr Erro:0x%02x\n",(uint16_t)res );	
+		}			
+		
+		/* 获取配置描述符 */
+		res = CH375GetConfDesc( UserBuffer,&l); 
+		if( res== USB_INT_SUCCESS )
+		{							
+			for( i = 0; i < l; i++ )
+			{
+				printf("0x%02x ",(uint16_t)UserBuffer[i]);
+			}
+			printf ("\n");					
+		}
+		else 
+		{
+			printf ("Get Conf Descr Erro:0x%02x\n",(uint16_t)res );	
+		}			
+		
+		/* 设置配置 */
+		res = CH375SetDeviceConf( 1 );
+		if( res != USB_INT_SUCCESS ) 
+		{
+			printf("Set Config Erro\n");
+		}
+			
+	}
+	
+	if( USBD.status == USBD_READY )     //设备初始化已完成
+	{
+		//根据设备信息结构体，找中断端点，并对其发送IN包
+		for( i=0;i!=USBD.itfmount;i++ )
+		{
+			for(j=0;j!=USBD.itf[i].edpmount;j++)
+			{
+				if((USBD.itf[i].edp[j].attr == 0x03) && (USBD.itf[i].edp[j].edpnum & 0x80) )  //中断上传端点
+				{
+					res = CH375InTrans( USBD.itf[i].edp[j].edpnum & 0x0F ,UserBuffer,&l,0 );     //对端点发IN包,NAK不重试
+					if( res == USB_INT_SUCCESS )
+					{
+						if(l == 4)	//检查是不是4个字节（标准鼠标）
+						{
+							send_buff[0]=UserBuffer[0];
+							send_buff[1]=UserBuffer[1];
+							send_buff[2]=UserBuffer[2];
+							send_buff[3]=UserBuffer[3];
+							send_flag = 1;
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
-/*******************************************************************************
-* Function Name  : main.
-* Description    : main routine.
-* Input          : None.
-* Output         : None.
-* Return         : None.
-*******************************************************************************/
+/**
+  * Function Name  : main
+  * Description    : Main
+  */
 int main(void)
 {
 	/*  Init USB Driver. */
@@ -69,9 +149,28 @@ int main(void)
 	STM_EVAL_LED234_Init();	//LED234 Port Init
 	STM_EVAL_PBInit();		//PUSH BUTTON Port Init
 	
+	//Init Timer3 for us delay
+	delay_init();
+	
+	/* Init CH375 */
+	uint8_t res;
+	res = mInitCH375Host();
+	if( res!=USB_INT_SUCCESS)
+	{
+		printf("CH375初始化错误\r\n");
+		while(1);
+	}
+	CH375InitSysVar();         //上电初始化设备信息默认值
+	printf("CH375初始化成功\r\n");
 	
 	while (1)
 	{
+		//CH375
+		if(send_flag != 1)	//上一帧已经发出
+		{
+			Check_CH375();
+		}
+		
 		//KEY
 		if(Systick_5ms >= 5)
 		{
@@ -178,11 +277,10 @@ int main(void)
 		//USB工作正常 且 PS/2接收到数据
 		if(bDeviceState == CONFIGURED && send_flag == 1)
 		{
-			Usart_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);				//串口发送出去
+			//Usart_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);				//串口发送出去
 			Usb_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);				//USB发送出去
 			send_flag = 0;
 		}
-		
 	}
 }
 
@@ -214,13 +312,6 @@ void USART1_IRQHandler(void)
   * @param  无
   * @retval 无
   */
-/*******************************************************************************
-* Function Name  : SysTick_Init
-* Description    : Config and start SysTick
-* Input          : None
-* Output         : None
-* Return         : None
-*******************************************************************************/
 static void SysTick_Init(void)
 {
 	/* SystemCoreClock / 1000    1ms中断一次

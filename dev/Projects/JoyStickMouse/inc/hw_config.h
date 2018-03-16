@@ -70,6 +70,10 @@ void Get_SerialNum(void);
 void Usb_Mouse_Send(u8 byte1, u8 byte2, u8 byte3,u8 byte4);
 void Usart_Mouse_Send(u8 byte1, u8 byte2, u8 byte3, u8 byte4);
 
+void delay_init(void);
+void delay_us(uint32_t us_cnt);
+void delay_ms(uint32_t ms_cnt);
+
 #endif  /*__HW_CONFIG_H*/
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

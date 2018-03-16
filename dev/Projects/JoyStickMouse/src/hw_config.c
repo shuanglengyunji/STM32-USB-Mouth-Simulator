@@ -37,6 +37,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "hw_config.h"
+#include <stdio.h>
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -51,6 +52,60 @@ EXTI_InitTypeDef EXTI_InitStructure;
 static void IntToUnicode (uint32_t value , uint8_t *pbuf , uint8_t len);
 
 /* Private functions ---------------------------------------------------------*/
+
+/**
+  * Function Name  : delay_init
+  * Description    : Configures Timer3 for us delay.
+  * Input          : None.
+  * Return         : None.
+  */
+void delay_init(void)
+{
+	TIM_TimeBaseInitTypeDef TIM_TimeBaseInitStruct;
+    
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM3, ENABLE);
+    
+    TIM_TimeBaseStructInit(&TIM_TimeBaseInitStruct);
+    TIM_TimeBaseInitStruct.TIM_ClockDivision = TIM_CKD_DIV1;
+    TIM_TimeBaseInitStruct.TIM_CounterMode = TIM_CounterMode_Down;
+    TIM_TimeBaseInitStruct.TIM_Period = 100-1;
+    TIM_TimeBaseInitStruct.TIM_Prescaler = (84-1);
+    TIM_TimeBaseInit(TIM3, &TIM_TimeBaseInitStruct);
+    
+    while((TIM3->SR & TIM_FLAG_Update)!=SET);
+    TIM3->SR = (uint16_t)~TIM_FLAG_Update;
+}
+
+/**
+  * Function Name  : delay_us
+  * Description    : Inserts a delay time.
+  * Input          : us_cnt: specifies the delay time length, in microseconds.
+  * Return         : None.
+  */
+void delay_us(uint32_t us_cnt)
+{
+	TIM3->CNT = us_cnt-1;
+    TIM3->CR1 |= TIM_CR1_CEN;    
+    while((TIM3->SR & TIM_FLAG_Update)!=SET);
+    TIM3->SR = (uint16_t)~TIM_FLAG_Update;
+    TIM3->CR1 &= ~TIM_CR1_CEN;
+}
+
+/**
+  * Function Name  : delay_ms
+  * Description    : Inserts a delay time.
+  * Input          : ms_cnt: specifies the delay time length, in milliseconds.
+  * Return         : None.
+  */
+void delay_ms(uint32_t ms_cnt)
+{
+	u16 i=0;  
+	while(ms_cnt--)
+	{
+		i=12000;  //自己定义
+		while(i--) ;    
+	}
+}
 
 /**
   * Function Name  : Set_System
@@ -326,6 +381,27 @@ static void IntToUnicode (uint32_t value , uint8_t *pbuf , uint8_t len)
     
     pbuf[ 2* idx + 1] = 0;
   }
+}
+
+/// 重定向c库函数printf到USART1
+int fputc(int ch, FILE *f)
+{
+		/* 发送一个字节数据到USART1 */
+		USART_SendData(USART1, (uint8_t) ch);
+		
+		/* 等待发送完毕 */
+		while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);		
+	
+		return (ch);
+}
+
+/// 重定向c库函数scanf到USART1
+int fgetc(FILE *f)
+{
+		/* 等待串口1输入数据 */
+		while (USART_GetFlagStatus(USART1, USART_FLAG_RXNE) == RESET);
+
+		return (int)USART_ReceiveData(USART1);
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -23,21 +23,6 @@ u8 com_flag = 0;
 /* Private functions ---------------------------------------------------------*/
 static void SysTick_Init(void);
 
-/**
-  * @brief  Inserts a delay time.
-  * @param  nTime: specifies the delay time length, in milliseconds.
-  * @retval None
-  */
-void delay_ms(u16 time)
-{    
-	u16 i=0;  
-	while(time--)
-	{
-		i=12000;  //自己定义
-		while(i--) ;    
-	}
-}
-
 /*******************************************************************************
 * Function Name  : main.
 * Description    : main routine.

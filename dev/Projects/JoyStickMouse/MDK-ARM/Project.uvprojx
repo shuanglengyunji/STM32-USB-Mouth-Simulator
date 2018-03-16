@@ -335,7 +335,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_STDPERIPH_DRIVER,STM32F10X_MD,USE_STM3210B_EVAL</Define>
               <Undefine></Undefine>
-              <IncludePath>../inc;../../../Libraries/CMSIS/Device/ST/STM32F10x/Include;../../../Libraries/STM32_USB-FS-Device_Driver/inc;../../../Libraries/STM32F10x_StdPeriph_Driver/inc;../../../Utilities/STM32_EVAL;../../../Utilities/STM32_EVAL/Common;../../../Utilities/STM32_EVAL/STM3210B_EVAL</IncludePath>
+              <IncludePath>../inc;../../../Libraries/CMSIS/Device/ST/STM32F10x/Include;../../../Libraries/STM32_USB-FS-Device_Driver/inc;../../../Libraries/STM32F10x_StdPeriph_Driver/inc;../../../Utilities/STM32_EVAL;../../../Utilities/STM32_EVAL/Common;../../../Utilities/STM32_EVAL/STM3210B_EVAL;..\..\..\Libraries\CH375</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -452,12 +452,27 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>STM32F10x/STM3210B_EVAL</GroupName>
+          <GroupName>STM3210B_EVAL</GroupName>
           <Files>
             <File>
               <FileName>stm3210b_eval.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../Utilities/STM32_EVAL/STM3210B_EVAL/stm3210b_eval.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>CH375</GroupName>
+          <Files>
+            <File>
+              <FileName>HOST_SYS.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Libraries\CH375\HOST_SYS.C</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Libraries\CH375\uart.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -502,7 +517,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>STM32F10x/CMSIS</GroupName>
+          <GroupName>CMSIS</GroupName>
           <Files>
             <File>
               <FileName>startup_stm32f10x_md.s</FileName>
@@ -595,32 +610,17 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>STM32F10x/STM32F10x_StdPeriph_Driver</GroupName>
+          <GroupName>STM32F10x_StdPeriph_Driver</GroupName>
           <Files>
-            <File>
-              <FileName>stm32f10x_rcc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_rcc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_i2c.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_usart.c</FilePath>
-            </File>
             <File>
               <FileName>misc.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/misc.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_dma.c</FileName>
+              <FileName>stm32f10x_usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_dma.c</FilePath>
+              <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_usart.c</FilePath>
             </File>
             <File>
               <FileName>stm32f10x_gpio.c</FileName>
@@ -638,19 +638,14 @@
               <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_exti.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_flash.c</FileName>
+              <FileName>stm32f10x_tim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_flash.c</FilePath>
+              <FilePath>..\..\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_tim.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_sdio.c</FileName>
+              <FileName>stm32f10x_rcc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_sdio.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_spi.c</FilePath>
+              <FilePath>..\..\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_rcc.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1105,12 +1100,27 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>STM32F10x/STM3210B_EVAL</GroupName>
+          <GroupName>STM3210B_EVAL</GroupName>
           <Files>
             <File>
               <FileName>stm3210b_eval.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../Utilities/STM32_EVAL/STM3210B_EVAL/stm3210b_eval.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>CH375</GroupName>
+          <Files>
+            <File>
+              <FileName>HOST_SYS.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Libraries\CH375\HOST_SYS.C</FilePath>
+            </File>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\Libraries\CH375\uart.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -1155,7 +1165,7 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>STM32F10x/CMSIS</GroupName>
+          <GroupName>CMSIS</GroupName>
           <Files>
             <File>
               <FileName>startup_stm32f10x_md.s</FileName>
@@ -1248,32 +1258,17 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>STM32F10x/STM32F10x_StdPeriph_Driver</GroupName>
+          <GroupName>STM32F10x_StdPeriph_Driver</GroupName>
           <Files>
-            <File>
-              <FileName>stm32f10x_rcc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_rcc.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_i2c.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_usart.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_usart.c</FilePath>
-            </File>
             <File>
               <FileName>misc.c</FileName>
               <FileType>1</FileType>
               <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/misc.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_dma.c</FileName>
+              <FileName>stm32f10x_usart.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_dma.c</FilePath>
+              <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_usart.c</FilePath>
             </File>
             <File>
               <FileName>stm32f10x_gpio.c</FileName>
@@ -1291,19 +1286,14 @@
               <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_exti.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_flash.c</FileName>
+              <FileName>stm32f10x_tim.c</FileName>
               <FileType>1</FileType>
-              <FilePath>../../../Libraries/STM32F10x_StdPeriph_Driver/src/stm32f10x_flash.c</FilePath>
+              <FilePath>..\..\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_tim.c</FilePath>
             </File>
             <File>
-              <FileName>stm32f10x_sdio.c</FileName>
+              <FileName>stm32f10x_rcc.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\..\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_sdio.c</FilePath>
-            </File>
-            <File>
-              <FileName>stm32f10x_spi.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_spi.c</FilePath>
+              <FilePath>..\..\..\Libraries\STM32F10x_StdPeriph_Driver\src\stm32f10x_rcc.c</FilePath>
             </File>
           </Files>
         </Group>
