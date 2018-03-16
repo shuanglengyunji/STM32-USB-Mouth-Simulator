@@ -39,27 +39,6 @@ void delay_ms(u16 time)
 	}
 }
 
-///**
-//  * @brief  Mouse_Cmd.
-//  * @param  left.right.middle.
-//			x.y.z.
-//  * @retval None
-//  */
-//static void Mouse_To_Byte(u8 left, u8 right, u8 middle, int8_t x, int8_t y, int8_t z)
-//{
-//	//byte1
-//	uint8_t tmp_byte1 = 0x00;
-//	if(left)	tmp_byte1 |= 0x01;
-//	if(right)	tmp_byte1 |= 0x02;
-//	if(middle)	tmp_byte1 |= 0x04;
-//	//byte2
-//	uint8_t tmp_byte2 = x;
-//	//byte3
-//	uint8_t tmp_byte3 = y;
-//	//byte4
-//	uint8_t tmp_byte4 = z;
-//}
-
 /*******************************************************************************
 * Function Name  : main.
 * Description    : main routine.
