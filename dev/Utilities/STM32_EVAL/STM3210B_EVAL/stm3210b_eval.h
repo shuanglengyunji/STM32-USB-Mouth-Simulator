@@ -80,7 +80,8 @@ void STM_EVAL_LEDToggle(u8 led);
 void STM_EVAL_PBInit(void);
 uint32_t STM_EVAL_PBGetState(u8 pushbutton);
 
-void STM_EVAL_COM1_Init(void);
+void STM_EVAL_USART1_Init(void);
+void STM_EVAL_USART3_Init(void);
     
 #ifdef __cplusplus
 }

@@ -46,8 +46,11 @@ int main(void)
 	/* Init Systick */
 	SysTick_Init();	//Init and enable Systick.
 	
+	/* Init communitcation port with master */
+	STM_EVAL_USART3_Init();	//Init Usart3 in EXIT mode
+	
 	/* Init other peripheral */
-	STM_EVAL_COM1_Init();	//Init Usart1 in EXIT mode
+	STM_EVAL_USART1_Init();	//Init Usart1 in EXIT mode
 	STM_EVAL_LED1_Init();	//LED1 Port Init
 	
 	while (1)
@@ -94,29 +97,30 @@ int main(void)
 		//USB工作正常 且 串口接收到数据
 		if(bDeviceState == CONFIGURED && com_flag == 1)
 		{
-			Usb_Mouse_Send(com_buff[0],com_buff[1],com_buff[2],com_buff[3]);
+			Usb_Mouse_Send(com_buff[0],com_buff[1],com_buff[2],com_buff[3]);	//发送USB数据
+			Led_flicker_Mode = 1;												//指示灯闪烁
 			com_flag = 0;
 		}
 	}
 }
 
 /**
-  * Function Name  : USART1_IRQHandler
+  * Function Name  : USART3_IRQHandler
   * Description    : This function handles Usart1 interrupt request.
   * Input          : None
   * Output         : None
   * Return         : None
   */
-void USART1_IRQHandler(void)
+void USART3_IRQHandler(void)
 {
 	uint8_t ch;
 	
 	static u8 step = 0;
 	
-	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
+	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
 	{ 	
-	    //ch = USART1->DR;
-		ch = USART_ReceiveData(USART1);
+	    //ch = USART3->DR;
+		ch = USART_ReceiveData(USART3);
 		
 		//如果上一帧没有送入USB口的BUFF，则不接收下一帧
 		if(com_flag)
@@ -164,6 +168,30 @@ void USART1_IRQHandler(void)
 				step = 0;
 			break;
 		}
+	}
+}
+
+/**
+  * Function Name  : USART1_IRQHandler
+  * Description    : This function handles Usart1 interrupt request.
+					 对电脑的调试端口
+  * Input          : None
+  * Output         : None
+  * Return         : None
+  */
+void USART1_IRQHandler(void)
+{
+	uint8_t ch;
+	
+	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)
+	{ 	
+	    //ch = USART1->DR;
+		ch = USART_ReceiveData(USART1);
+		
+//		//把接收到的东西发回去
+//		while (USART_GetFlagStatus(USART1, USART_FLAG_TXE) == RESET);	/* 等待发送完毕 */
+//		USART_SendData(USART1, (uint8_t) ch);							/* 发送一个字节数据到USART1 */
+		
 	}
 }
 
