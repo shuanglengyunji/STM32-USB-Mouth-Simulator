@@ -289,10 +289,7 @@ int main(void)
 	while (1)
 	{
 		//CH375
-		if(send_flag != 1)	//上一帧已经发出
-		{
-			Check_CH375();
-		}
+		Check_CH375();
 		
 		//KEY
 		if(Systick_5ms >= 5)
@@ -311,11 +308,19 @@ int main(void)
 		}
 		
 		//USB工作正常 且 PS/2接收到数据
-		if(bDeviceState == CONFIGURED && send_flag == 1)
+		if( send_flag == 1)
 		{
-			//Usart_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);			//串口发送出去
-			Usb_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);				//USB发送出去
-			Led_flicker_Mode = 1; 																//指示灯闪烁
+			//串口发送出去
+			Usart_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);
+			
+			//USB发送出去
+			if(bDeviceState == CONFIGURED)
+			{
+				Usb_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);		
+				Led_flicker_Mode = 1; 														//指示灯闪烁
+			}
+			
+			//清发送flag
 			send_flag = 0;
 		}
 	}

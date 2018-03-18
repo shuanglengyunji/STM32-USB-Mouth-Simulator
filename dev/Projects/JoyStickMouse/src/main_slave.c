@@ -8,6 +8,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "hw_config.h"
+#include <stdio.h>
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
@@ -72,12 +73,14 @@ int main(void)
 	/* Init Systick */
 	SysTick_Init();	//Init and enable Systick.
 	
-	/* Init communitcation port with master */
-	STM_EVAL_USART3_Init();	//Init Usart3 in EXIT mode
-	
 	/* Init other peripheral */
 	STM_EVAL_USART1_Init();	//Init Usart1 in EXIT mode
 	STM_EVAL_LED1_Init();	//LED1 Port Init
+	printf("串口1初始化完毕\r\n");
+	
+	/* Init communitcation port with master */
+	STM_EVAL_USART3_Init();	//Init Usart3 in EXIT mode
+	printf("串口3初始化完毕\r\n");
 	
 	while (1)
 	{
@@ -99,8 +102,13 @@ int main(void)
 		//USB工作正常 且 串口接收到数据
 		if(bDeviceState == CONFIGURED && com_flag == 1)
 		{
-			Usb_Mouse_Send(com_buff[0],com_buff[1],com_buff[2],com_buff[3]);	//发送USB数据
+			//发送USB数据
+			Usb_Mouse_Send(com_buff[0],com_buff[1],com_buff[2],com_buff[3]);
 			Led_flicker_Mode = 1;												//指示灯闪烁
+			
+			//printf("0x%02x 0x%02x 0x%02x 0x%02x\r\n",(uint16_t)com_buff[0],(uint16_t)com_buff[1],(uint16_t)com_buff[2],(uint16_t)com_buff[3]);
+			
+			//清发送flag
 			com_flag = 0;
 		}
 	}
@@ -144,6 +152,7 @@ void USART3_IRQHandler(void)
 					step = 2;
 				else
 					step = 0;
+			break;
 				
 			case 2:
 				com_buff[0] = ch;	//byte1

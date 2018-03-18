@@ -215,12 +215,12 @@ void STM_EVAL_USART3_Init(void)
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3,ENABLE);
 	
 	/* USART1 GPIO config */
-	/* Configure USART1 Tx (PA.09) as alternate function push-pull */
+	/* Configure USART3 Tx (PB.10) as alternate function push-pull */
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_10;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
-	/* Configure USART1 Rx (PA.10) as input floating */
+	/* Configure USART3 Rx (PB.11) as input floating */
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;
 	GPIO_Init(GPIOB, &GPIO_InitStructure);
@@ -237,7 +237,7 @@ void STM_EVAL_USART3_Init(void)
 	NVIC_InitTypeDef NVIC_InitStructure;
 	
 	/* Enable the USARTy Interrupt */
-	NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;	 
+	NVIC_InitStructure.NVIC_IRQChannel = USART3_IRQn;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;	//主优先级开得比较高，从优先级比较低
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
