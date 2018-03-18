@@ -132,18 +132,18 @@ uint8_t	mInitCH375Host( void )  /* 初始化CH375 */
 	delay_ms(50);        
 	
 	/* 接口硬件初始化 */
-	CH375_PORT_INIT( );
+	CH375_PORT_INIT( );		//波特率9600
 	
-	/* 测试单片机与CH375之间的通讯接口 */
-	xWriteCH375Cmd( CMD_CHECK_EXIST );  
-	xWriteCH375Data( 0x65 );
-	res = xReadCH375Data( );
-	if ( res != 0x9A )
-		return( ERR_USB_UNKNOWN );  /* 通讯接口不正常,可能原因有:接口连接异常,其它设备影响(片选不唯一),串口波特率,一直在复位,晶振不工作 */
+//	/* 测试单片机与CH375之间的通讯接口 */
+//	xWriteCH375Cmd( CMD_CHECK_EXIST );  
+//	xWriteCH375Data( 0x65 );
+//	res = xReadCH375Data( );
+//	if ( res != 0x9A )
+//		return( ERR_USB_UNKNOWN );  /* 通讯接口不正常,可能原因有:接口连接异常,其它设备影响(片选不唯一),串口波特率,一直在复位,晶振不工作 */
 	
 	/////////////////////////////////////////////////////////////////////////////////////
 	
-	/* 将串口波特率提高 */
+	/* 用9600发指令将串口波特率提高到115200 */
 	xWriteCH375Cmd( CMD_SET_BAUDRATE );  //设置USB波特率
 	xWriteCH375Data( 0x03 );	//0x03 0xCC -- 115200     0x03 0xF3 -- 460800
 	xWriteCH375Data( 0xCC );
@@ -151,8 +151,8 @@ uint8_t	mInitCH375Host( void )  /* 初始化CH375 */
 	CH375_COM_INIT(115200);		//切换本地串口波特率
 	delay_ms(50);	//延时50ms
 	res = xReadCH375Data();
-	if ( res != CMD_RET_SUCCESS ) 
-		return( ERR_USB_UNKNOWN );
+//	if ( res != CMD_RET_SUCCESS ) 
+//		return( ERR_USB_UNKNOWN );
 	
 	/* 重新测试单片机与CH375之间的通讯接口 */
 	xWriteCH375Cmd( CMD_CHECK_EXIST );  

@@ -46,7 +46,7 @@
 /* Private variables ---------------------------------------------------------*/
 extern __IO uint32_t DevRemoteWakeup;
 extern u32 Systick_5ms;		//KEY
-extern u32 Systick_100ms;	//LED
+extern u32 Systick_50ms;	//LED
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -168,7 +168,7 @@ void PendSV_Handler(void)
 void SysTick_Handler(void)
 {
 	Systick_5ms++;
-	Systick_100ms++;
+	Systick_50ms++;
 }
 
 /******************************************************************************/

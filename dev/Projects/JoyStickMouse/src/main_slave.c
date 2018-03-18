@@ -13,7 +13,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 u32 Systick_5ms = 0;	//KEY
-u32 Systick_100ms = 0;	//LED
+u32 Systick_50ms = 0;	//LED
 u8 Led_flicker_Mode = 0;	//LED的闪烁模式
 u8 com_buff[4] = {0, 0, 0, 0};
 u8 com_flag = 0;
@@ -23,13 +23,39 @@ u8 com_flag = 0;
 /* Private functions ---------------------------------------------------------*/
 static void SysTick_Init(void);
 
-/*******************************************************************************
-* Function Name  : main.
-* Description    : main routine.
-* Input          : None.
-* Output         : None.
-* Return         : None.
-*******************************************************************************/
+void Check_LED(void)
+{
+	static u8 counter_led = 0;
+	
+	switch(Led_flicker_Mode)
+	{
+		case 0:
+			STM_EVAL_LEDOff(LED1);	//关闭LED
+		break;
+		
+		case 1:
+			counter_led++;
+			if( counter_led % 1 == 0 )	//50ms变换一下
+			{
+				STM_EVAL_LEDToggle(LED1);
+			}
+			if(counter_led >= 2)		//只持续闪0.1s
+			{
+				counter_led = 0;
+				Led_flicker_Mode = 0;	//闪完之后就回到不闪的模式去
+			}
+		break;
+		
+		default:
+			STM_EVAL_LEDOn(LED1);	//出现了不应该出现的情况，LED常亮
+		break;
+	}
+}
+
+/**
+  * Function Name  : main
+  * Description    : Main
+  */
 int main(void)
 {
 	/*  Init USB Driver. */
@@ -63,35 +89,11 @@ int main(void)
 		}
 		
 		//LED
-		if(Systick_100ms >= 100)
+		if(Systick_50ms >= 50)
 		{
-			Systick_100ms = 0;
+			Systick_50ms = 0;
 			
-			static u8 counter_led = 0;
-			
-			switch(Led_flicker_Mode)
-			{
-				case 0:
-					STM_EVAL_LEDOff(LED1);	//关闭LED
-				break;
-				
-				case 1:
-					counter_led++;
-					if( counter_led % 1 == 0 )	//200ms变换一下
-					{
-						STM_EVAL_LEDToggle(LED1);
-					}
-					if(counter_led >= 10)		//只持续闪1s
-					{
-						counter_led = 0;
-						Led_flicker_Mode = 0;	//闪完之后就回到不闪的模式去
-					}
-				break;
-				
-				default:
-					STM_EVAL_LEDOn(LED1);	//出现了不应该出现的情况，LED常亮
-				break;
-			}
+			Check_LED();
 		}
 		
 		//USB工作正常 且 串口接收到数据

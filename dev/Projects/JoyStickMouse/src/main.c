@@ -16,7 +16,7 @@
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 u32 Systick_5ms = 0;		//KEY
-u32 Systick_100ms = 0;		//LED
+u32 Systick_50ms = 0;		//LED
 u8 Led_flicker_Mode = 0;	//LED的闪烁模式
 
 u8 send_buff[4] = {0, 0, 0, 0};
@@ -40,27 +40,39 @@ void Check_CH375(void)
 	
 	if( CH375CheckConnect() == USBD_CONNECT )          /* 刚检测到一个设备接入，需要枚举 */
 	{
-		//printf ( "Device Connect\n" );
-		//开始枚举操作		
-		res = CH375BusReset();                   /* 总线复位 */
+		printf ( "设备连接成功\r\n" );
+		
+		//开始枚举操作
+		
+		printf ( "开始枚举\r\n" );
+		
+		/* 总线复位 */
+		res = CH375BusReset();                   
 		if( res != USB_INT_SUCCESS ) 
 		{
 			printf("Bus Reset Erro\n");
 		}
+		else
+		{
+			printf ( "总线复位成功\r\n" );
+		}
+		
 		delay_ms( 50 );                          /* 等待设备稳定 */
 
 		/* 获取设备描述符 */			
 		res = CH375GetDeviceDesc( UserBuffer,&l); 
 		if( res == USB_INT_SUCCESS )
-		{				
+		{
+			printf ( "获取设备描述符成功\r\n" );
 			for( i = 0; i < l; i++ )
 			{
 				printf("0x%02x ",(uint16_t)UserBuffer[i]);
 			}
-			printf ("\n");
+			printf ("\r\n");
 		}
 		else 
 		{
+			printf ( "获取设备描述符失败\r\n" );
 			printf("Get Device Descr Erro:0x%02x\n",(uint16_t)res );
 		}
 		
@@ -68,21 +80,28 @@ void Check_CH375(void)
 		res = CH375SetDeviceAddr( 2 );
 		if( res!= USB_INT_SUCCESS )
 		{
+			printf ( "设置地址失败\r\n" );
 			printf ("Set Addr Erro:0x%02x\n",(uint16_t)res );	
-		}			
+		}
+		else
+		{
+			printf ( "设置地址成功\r\n" );
+		}
 		
 		/* 获取配置描述符 */
 		res = CH375GetConfDesc( UserBuffer,&l); 
 		if( res== USB_INT_SUCCESS )
-		{							
+		{
+			printf ( "获取配置描述符成功\r\n" );
 			for( i = 0; i < l; i++ )
 			{
 				printf("0x%02x ",(uint16_t)UserBuffer[i]);
 			}
-			printf ("\n");					
+			printf ("\r\n");					
 		}
 		else 
 		{
+			printf ( "获取配置描述符失败\r\n" );
 			printf ("Get Conf Descr Erro:0x%02x\n",(uint16_t)res );	
 		}			
 		
@@ -90,9 +109,13 @@ void Check_CH375(void)
 		res = CH375SetDeviceConf( 1 );
 		if( res != USB_INT_SUCCESS ) 
 		{
+			printf ( "设置配置失败\r\n" );
 			printf("Set Config Erro\n");
 		}
-			
+		else
+		{
+			printf ( "设置配置成功\r\n" );
+		}
 	}
 	
 	if( USBD.status == USBD_READY )     //设备初始化已完成
@@ -107,6 +130,7 @@ void Check_CH375(void)
 					res = CH375InTrans( USBD.itf[i].edp[j].edpnum & 0x0F ,UserBuffer,&l,0 );     //对端点发IN包,NAK不重试
 					if( res == USB_INT_SUCCESS )
 					{
+						//printf("USB传输成功\r\n");
 						if(l == 4)	//检查是不是4个字节（标准鼠标）
 						{
 							send_buff[0]=UserBuffer[0];
@@ -201,11 +225,11 @@ void Check_LED(void)
 		
 		case 1:
 			counter_led++;
-			if( counter_led % 1 == 0 )	//200ms变换一下
+			if( counter_led % 1 == 0 )	//50ms变换一下
 			{
 				STM_EVAL_LEDToggle(LED1);
 			}
-			if(counter_led >= 10)		//只持续闪1s
+			if(counter_led >= 2)		//只持续闪0.1s
 			{
 				counter_led = 0;
 				Led_flicker_Mode = 0;	//闪完之后就回到不闪的模式去
@@ -279,9 +303,9 @@ int main(void)
 		}
 		
 		//LED
-		if(Systick_100ms >= 100)
+		if(Systick_50ms >= 50)
 		{
-			Systick_100ms = 0;
+			Systick_50ms = 0;
 			
 			Check_LED();
 		}
