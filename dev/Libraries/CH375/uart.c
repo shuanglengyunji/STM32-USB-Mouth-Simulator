@@ -87,7 +87,7 @@ void xWriteCH375Cmd( uint8_t cmd ) 		/* 向CH375的命令端口写入命令,周期不小于2uS,
 //写数据
 void xWriteCH375Data( uint8_t dat ) 	/* 向CH375的数据端口写入数据,周期不小于1uS,如果单片机较快则延时 */
 {
-	while((USART2->SR&0x40)==0);   
+	while((USART2->SR&0x40)==0);
 	USART2->DR = (uint16_t)dat;
 	delay_us(1);
 }
@@ -138,7 +138,7 @@ uint8_t	mInitCH375Host( void )  /* 初始化CH375 */
 	xWriteCH375Cmd( CMD_CHECK_EXIST );  
 	xWriteCH375Data( 0x65 );
 	res = xReadCH375Data( );
-	if ( res != 0x9A ) 
+	if ( res != 0x9A )
 		return( ERR_USB_UNKNOWN );  /* 通讯接口不正常,可能原因有:接口连接异常,其它设备影响(片选不唯一),串口波特率,一直在复位,晶振不工作 */
 	
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -147,9 +147,10 @@ uint8_t	mInitCH375Host( void )  /* 初始化CH375 */
 	xWriteCH375Cmd( CMD_SET_BAUDRATE );  //设置USB波特率
 	xWriteCH375Data( 0x03 );	//0x03 0xCC -- 115200     0x03 0xF3 -- 460800
 	xWriteCH375Data( 0xCC );
+	while((USART2->SR&0x40)==0);	//等待发送完毕
 	CH375_COM_INIT(115200);		//切换本地串口波特率
-	delay_ms(1);	//延时1ms
-	res = xReadCH375Data( );
+	delay_ms(50);	//延时50ms
+	res = xReadCH375Data();
 	if ( res != CMD_RET_SUCCESS ) 
 		return( ERR_USB_UNKNOWN );
 	

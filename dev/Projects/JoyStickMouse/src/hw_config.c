@@ -134,10 +134,11 @@ void delay_init(void)
 /**
   * Function Name  : delay_us
   * Description    : Inserts a delay time.
+					 最长延时时间65536us
   * Input          : us_cnt: specifies the delay time length, in microseconds.
   * Return         : None.
   */
-void delay_us(uint32_t us_cnt)
+void delay_us(uint16_t us_cnt)
 {
 	TIM3->CNT = us_cnt-1;
     TIM3->CR1 |= TIM_CR1_CEN;    
