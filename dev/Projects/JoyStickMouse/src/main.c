@@ -170,9 +170,7 @@ void Check_Key(void)
 		if(key_last1 >= 4)		//防抖时间间隔  4*5ms = 20ms
 		{
 			//满足要求，点击一次
-			key_host = 1;
-			key_slave = 0;
-			Led_flicker_Mode = 0;
+			key_slave = ! key_slave;	//!是在0和1之间转换，~是按位取反
 		}
 	}
 	else
@@ -192,12 +190,10 @@ void Check_Key(void)
 	if(key2)
 	{
 		key_last2++;
-		if(key_last2 >= 4)		//防抖时间间隔  4*5ms = 20ms
+		if(key_last2 >= 2)		//防抖时间间隔  4*5ms = 20ms
 		{
 			//满足要求，点击一次
-			key_host = 0;
-			key_slave = 1;
-			Led_flicker_Mode = 1;
+			key_host = ! key_host;
 		}
 	}
 	else
@@ -324,14 +320,28 @@ int main(void)
 		//USB工作正常 且 PS/2接收到数据
 		if( send_flag == 1)
 		{
-			//串口发送出去
-			Usart_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);
-			
-			//USB发送出去
-			if(bDeviceState == CONFIGURED)
+			if( key_slave != 0 && key_host !=0 )
 			{
-				Usb_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);		
-				Led_flicker_Mode = 1; 														//指示灯闪烁
+				//只有按键状态有效，x、y轴和滚轮移动均无效
+				send_buff[1] = 0;
+				send_buff[2] = 0;
+				send_buff[3] = 0;
+			}
+			
+			if(key_slave)
+			{
+				//串口发送出去
+				Usart_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);
+			}
+			
+			if(key_host)
+			{
+				//USB发送出去
+				if(bDeviceState == CONFIGURED)
+				{
+					Usb_Mouse_Send(send_buff[0],send_buff[1],send_buff[2],send_buff[3]);		
+					Led_flicker_Mode = 1; 														//指示灯闪烁
+				}
 			}
 			
 			//清发送flag
