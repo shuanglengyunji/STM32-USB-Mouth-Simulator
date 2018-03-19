@@ -191,11 +191,11 @@ void STM_EVAL_PBInit(void)
 uint32_t STM_EVAL_PBGetState(u8 pushbutton)
 {
 	if(pushbutton == PUSH_BUTTON1)
-		return GPIO_ReadInputDataBit(PUSH_BUTTON1_GPIO_PORT, PUSH_BUTTON1_PIN);
+		return ! GPIO_ReadInputDataBit(PUSH_BUTTON1_GPIO_PORT, PUSH_BUTTON1_PIN);
 	else if(pushbutton == PUSH_BUTTON2)
-		return GPIO_ReadInputDataBit(PUSH_BUTTON2_GPIO_PORT, PUSH_BUTTON2_PIN);
+		return ! GPIO_ReadInputDataBit(PUSH_BUTTON2_GPIO_PORT, PUSH_BUTTON2_PIN);
 	else if(pushbutton == PUSH_BUTTON3)
-		return GPIO_ReadInputDataBit(PUSH_BUTTON3_GPIO_PORT, PUSH_BUTTON3_PIN);
+		return ! GPIO_ReadInputDataBit(PUSH_BUTTON3_GPIO_PORT, PUSH_BUTTON3_PIN);
 	else
 		return 0;
 }

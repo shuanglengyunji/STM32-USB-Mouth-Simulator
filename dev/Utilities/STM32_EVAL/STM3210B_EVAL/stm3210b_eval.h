@@ -57,17 +57,17 @@ typedef enum
 //PUSH BUTTON
 
 #define PUSH_BUTTON1					1
-#define PUSH_BUTTON1_PIN                GPIO_Pin_0
-#define PUSH_BUTTON1_GPIO_PORT          GPIOA
-#define PUSH_BUTTON1_GPIO_CLK           RCC_APB2Periph_GPIOA
+#define PUSH_BUTTON1_PIN                GPIO_Pin_14
+#define PUSH_BUTTON1_GPIO_PORT          GPIOC
+#define PUSH_BUTTON1_GPIO_CLK           RCC_APB2Periph_GPIOC
 
 #define PUSH_BUTTON2					2
-#define PUSH_BUTTON2_PIN                GPIO_Pin_0
-#define PUSH_BUTTON2_GPIO_PORT          GPIOA
-#define PUSH_BUTTON2_GPIO_CLK           RCC_APB2Periph_GPIOA
+#define PUSH_BUTTON2_PIN                GPIO_Pin_15
+#define PUSH_BUTTON2_GPIO_PORT          GPIOC
+#define PUSH_BUTTON2_GPIO_CLK           RCC_APB2Periph_GPIOC
 
 #define PUSH_BUTTON3					3
-#define PUSH_BUTTON3_PIN                GPIO_Pin_0
+#define PUSH_BUTTON3_PIN                GPIO_Pin_1
 #define PUSH_BUTTON3_GPIO_PORT          GPIOA
 #define PUSH_BUTTON3_GPIO_CLK           RCC_APB2Periph_GPIOA
 

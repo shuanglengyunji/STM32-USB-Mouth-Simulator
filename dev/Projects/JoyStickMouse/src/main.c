@@ -15,14 +15,19 @@
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
+//systick
 u32 Systick_5ms = 0;		//KEY
 u32 Systick_50ms = 0;		//LED
+//led
 u8 Led_flicker_Mode = 0;	//LED的闪烁模式
-
+//usb_send
 u8 send_buff[4] = {0, 0, 0, 0};
 u8 send_flag = 0;
-
+//ch375
 uint8_t UserBuffer[256];
+//send_select
+u8 key_host = 0;
+u8 key_slave = 0;
 
 /* Extern variables ----------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -150,7 +155,10 @@ void Check_Key(void)
 {
 	//按键检测 + 延时防抖
 	
+	///////////////////////////////////////////////////////////////////
 	//KEY1
+	
+	//key1对应的是SLAVE
 	
 	u32 key1 = 0;					//本次按键状态
 	static u32 key_last1 = 0;		//上一次的按键状态
@@ -162,7 +170,9 @@ void Check_Key(void)
 		if(key_last1 >= 4)		//防抖时间间隔  4*5ms = 20ms
 		{
 			//满足要求，点击一次
-			
+			key_host = 1;
+			key_slave = 0;
+			Led_flicker_Mode = 0;
 		}
 	}
 	else
@@ -172,6 +182,8 @@ void Check_Key(void)
 	
 	///////////////////////////////////////////////////////////////////
 	//KEY2
+	
+	//key2对应的是HOST
 	
 	u32 key2 = 0;					//本次按键状态
 	static u32 key_last2 = 0;		//上一次的按键状态
@@ -183,7 +195,9 @@ void Check_Key(void)
 		if(key_last2 >= 4)		//防抖时间间隔  4*5ms = 20ms
 		{
 			//满足要求，点击一次
-			
+			key_host = 0;
+			key_slave = 1;
+			Led_flicker_Mode = 1;
 		}
 	}
 	else
