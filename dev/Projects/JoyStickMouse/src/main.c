@@ -258,43 +258,45 @@ void Check_LED(void)
   */
 int main(void)
 {
-	/*  Init USB Driver. */
-	Set_System();	//Enable the PWR clock
-					//Configure USB DM/DP pins
-					//Enable the USB PULL UP
-					//Configure the EXTI line 18 connected internally to the USB IP (If defined USB_LOW_PWR_MGMT_SUPPORT)
-	USB_Interrupts_Config();	//2 bit for pre-emption priority, 2 bits for subpriority
-								//Enable the USB interrupt
-								//Enable the Key EXTI line Interrupt
-	Set_USBClock();	//Select USB clock source and Init it
-	USB_Init();	//Init USB peripheral
+	/*  2 bit for pre-emption priority, 2 bits for subpriority  */
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 	
-	//Init Timer3 for us delay
-	delay_init();
+	/*  Init printf port for debug  */
+	STM_EVAL_USART1_Init();		//Init Usart1 in EXIT mode	调试端口
 	
-	/* Init Systick */
-	SysTick_Init();	//Init and enable Systick.
+	/*  Init USB Driver.  */	//上电后应该尽快初始化USB
+	Set_System();				//Enable the PWR clock，Configure USB DM/DP pins，Enable the USB PULL UP，Configure the EXTI line 18 connected internally to the USB IP (If defined USB_LOW_PWR_MGMT_SUPPORT)
+	USB_Interrupts_Config();	//Enable the USB interrupt，Enable the Key EXTI line Interrupt
+	Set_USBClock();				//Select USB clock source and Init it
+	USB_Init();					//Init USB peripheral
+	printf("USB初始化完毕\r\n");
 	
-	/* Init other peripheral */
-	STM_EVAL_USART1_Init();	//Init Usart1 in EXIT mode
-	STM_EVAL_LED1_Init();	//LED1 Port Init
+	/*  Init other peripheral  */
+	STM_EVAL_LED1_Init();	//LED1 Port Init			板载指示灯
+	STM_EVAL_LED234_Init();	//LED234 Port Init			外部指示灯
+	STM_EVAL_PBInit();		//PUSH BUTTON Port Init		外部按键
+	printf("按键与LED初始化完毕\r\n");
 	
-	STM_EVAL_LED234_Init();	//LED234 Port Init
-	STM_EVAL_PBInit();		//PUSH BUTTON Port Init
+	/*  Port for Command to slave  */
+	STM_EVAL_USART3_Init();	//Init Usart3 in EXIT mode	指令端口
+	printf("USART3指令端口初始化完毕\r\n");
 	
-	/* Init communitcation port with slave */
-	STM_EVAL_USART3_Init();	//Init Usart3 in EXIT mode
-	
-	/* Init CH375 */
+	/*  Init CH375 and Exact Delay */
+	delay_init();	//Init Timer3 for us delay
 	uint8_t res;
-	res = mInitCH375Host();
-	if( res!=USB_INT_SUCCESS)
+	res = mInitCH375Host();		//初始化CH375
+	if( res!=USB_INT_SUCCESS )	//检查初始化结果
 	{
 		printf("CH375初始化错误\r\n");
 		while(1);
 	}
-	CH375InitSysVar();         //上电初始化设备信息默认值
+	CH375InitSysVar();		//本地状态结构体恢复上电默认值
 	printf("CH375初始化成功\r\n");
+	
+	/* Init Systick */
+	SysTick_Init();	//Init and enable Systick.
+	
+	printf("Systick初始化完毕，开始运行\r\n");
 	
 	while (1)
 	{
